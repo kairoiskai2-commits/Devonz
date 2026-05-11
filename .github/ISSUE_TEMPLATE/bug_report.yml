@@ -1,0 +1,65 @@
+name: Bug Report
+description: Something not working? Let us know!
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting this! Just tell us what went wrong — only the first field is required.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the bug. What did you see vs what you expected?
+      placeholder: "e.g. The preview showed a blank page after generating a React component"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: How can we trigger this? (if you remember)
+      placeholder: |
+        1. Did X
+        2. Then Y
+        3. Saw Z
+    validations:
+      required: false
+
+  - type: textarea
+    id: error-output
+    attributes:
+      label: Error output
+      description: Any errors from the browser console or terminal? (F12 → Console)
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should have happened?
+      placeholder: "e.g. The component should have rendered in the preview"
+    validations:
+      required: false
+
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Environment info
+      description: OS, browser, Node version, Docker or source — whatever you know.
+      render: shell
+      placeholder: "e.g. Windows 11, Chrome, Node 20, running via Docker"
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Anything else?
+      description: Screenshots, AI provider/model, related issues — anything that might help.
+    validations:
+      required: false

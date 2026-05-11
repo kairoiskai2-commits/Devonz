@@ -1,0 +1,153 @@
+import { cn } from '~/utils/cn';
+import { Button } from './Button';
+import { motion } from 'framer-motion';
+
+// Variant-specific styles
+const VARIANT_STYLES = {
+  default: {
+    container: 'py-8 p-6',
+    icon: {
+      container: 'w-12 h-12 mb-3',
+      size: 'w-6 h-6',
+    },
+    title: 'text-base',
+    description: 'text-sm mt-1',
+    actions: 'mt-4',
+    buttonSize: 'default' as const,
+  },
+  compact: {
+    container: 'py-4 p-4',
+    icon: {
+      container: 'w-10 h-10 mb-2',
+      size: 'w-5 h-5',
+    },
+    title: 'text-sm',
+    description: 'text-xs mt-0.5',
+    actions: 'mt-3',
+    buttonSize: 'sm' as const,
+  },
+};
+
+interface EmptyStateProps {
+  /** Icon class name */
+  icon?: string;
+
+  /** Title text */
+  title: string;
+
+  /** Optional description text */
+  description?: string;
+
+  /** Primary action button label */
+  actionLabel?: string;
+
+  /** Primary action button callback */
+  onAction?: () => void;
+
+  /** Secondary action button label */
+  secondaryActionLabel?: string;
+
+  /** Secondary action button callback */
+  onSecondaryAction?: () => void;
+
+  /** Additional class name */
+  className?: string;
+
+  /** Component size variant */
+  variant?: 'default' | 'compact';
+}
+
+/**
+ * EmptyState component
+ *
+ * A component for displaying empty states with optional actions.
+ */
+export function EmptyState({
+  icon = 'i-ph:folder-simple-dashed',
+  title,
+  description,
+  actionLabel,
+  onAction,
+  secondaryActionLabel,
+  onSecondaryAction,
+  className,
+  variant = 'default',
+}: EmptyStateProps) {
+  // Get styles based on variant
+  const styles = VARIANT_STYLES[variant];
+
+  // Animation variants for buttons
+  const buttonAnimation = {
+    whileHover: { scale: 1.02 },
+    whileTap: { scale: 0.98 },
+  };
+
+  return (
+    <div
+      className={cn(
+        'flex flex-col items-center justify-center',
+        'text-devonz-elements-textSecondary dark:text-devonz-elements-textSecondary-dark',
+        'bg-devonz-elements-background-depth-2 dark:bg-devonz-elements-background-depth-3 rounded-lg',
+        styles.container,
+        className,
+      )}
+    >
+      {/* Icon */}
+      <div
+        className={cn(
+          'rounded-full bg-devonz-elements-background-depth-3 dark:bg-devonz-elements-background-depth-4 flex items-center justify-center',
+          styles.icon.container,
+        )}
+      >
+        <span
+          className={cn(
+            icon,
+            styles.icon.size,
+            'text-devonz-elements-textTertiary dark:text-devonz-elements-textTertiary-dark',
+          )}
+        />
+      </div>
+
+      {/* Title */}
+      <p className={cn('font-medium', styles.title)}>{title}</p>
+
+      {/* Description */}
+      {description && (
+        <p
+          className={cn(
+            'text-devonz-elements-textTertiary dark:text-devonz-elements-textTertiary-dark text-center max-w-xs',
+            styles.description,
+          )}
+        >
+          {description}
+        </p>
+      )}
+
+      {/* Action buttons */}
+      {(actionLabel || secondaryActionLabel) && (
+        <div className={cn('flex items-center gap-2', styles.actions)}>
+          {actionLabel && onAction && (
+            <motion.div {...buttonAnimation}>
+              <Button
+                onClick={onAction}
+                variant="default"
+                size={styles.buttonSize}
+                className="bg-accent-600 hover:bg-accent-700 text-white"
+              >
+                {actionLabel}
+              </Button>
+            </motion.div>
+          )}
+
+          {secondaryActionLabel && onSecondaryAction && (
+            <motion.div {...buttonAnimation}>
+              <Button onClick={onSecondaryAction} variant="outline" size={styles.buttonSize}>
+                {secondaryActionLabel}
+              </Button>
+            </motion.div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
