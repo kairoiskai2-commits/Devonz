@@ -52,6 +52,9 @@ import {
   isAgentReviewLoopActive,
 } from '~/lib/services/agentChatIntegration';
 import { getAgentOrchestrator } from '~/lib/services/agentOrchestratorService';
+import { db, schema } from '~/lib/.server/db';
+import { eq } from 'drizzle-orm';
+import { auth } from '~/lib/.server/auth';
 
 export const action = withSecurity(chatAction, {
   auth: AUTH_PRESETS.authenticated,
@@ -108,6 +111,7 @@ async function chatAction({ context, request }: ActionFunctionArgs) {
     agentMode,
     modelRoutingConfig,
     blueprintMode,
+    customAgentId,
   } = parsed.data as {
     messages: Messages;
     files: FileMap | undefined;
@@ -129,7 +133,71 @@ async function chatAction({ context, request }: ActionFunctionArgs) {
     agentMode?: boolean;
     modelRoutingConfig?: import('~/lib/.server/llm/model-router').ModelRoutingConfig;
     blueprintMode?: boolean;
+    customAgentId?: string;
   };
+
+  // ── Resolve custom agent system prompt ──────────────────────────────────
+  let customAgentSystemPrompt: string | undefined;
+
+  if (customAgentId) {
+    try {
+      const sessionData = await auth.api.getSession({ headers: request.headers });
+
+      if (sessionData?.user?.id) {
+        const agents = await db
+          .select()
+          .from(schema.agents)
+          .where(eq(schema.agents.id, customAgentId))
+          .limit(1);
+
+        if (agents[0] && (agents[0].isPublic || agents[0].userId === sessionData.user.id)) {
+          const agent = agents[0];
+
+          // Build composite system prompt from agent + its selected skills
+          let agentPrompt = `You are ${agent.name}. ${agent.systemPrompt}`;
+
+          if (agent.skills && Array.isArray(agent.skills) && agent.skills.length > 0) {
+            // Skills stored as ids — resolve built-in skill instructions inline
+            const BUILTIN_SKILL_INSTRUCTIONS: Record<string, string> = {
+              'builtin-typescript':
+                'Always write TypeScript with strict type annotations. Prefer interfaces over types. Never use `any`. Always annotate function parameters and return types.',
+              'builtin-tailwind':
+                'Use Tailwind CSS utility classes for all styling. Never write custom CSS unless absolutely necessary. Use responsive design with mobile-first breakpoints.',
+              'builtin-dark-mode':
+                'Design all UIs with dark mode as the primary theme. Use dark backgrounds (gray-900, slate-900), light text, and colored accents. Always ensure good contrast ratios.',
+              'builtin-tests':
+                'Write unit tests for all business logic using Vitest. Aim for meaningful test coverage. Test edge cases and error paths. Do not test implementation details, test behavior.',
+              'builtin-comments':
+                'Add JSDoc comments to all functions, classes, and complex logic. Explain the "why" not just the "what". Document parameters, return values, and thrown exceptions.',
+              'builtin-accessibility':
+                'Always build accessible UIs. Use semantic HTML elements. Add ARIA labels where needed. Ensure keyboard navigation works. Maintain 4.5:1 contrast ratio for text.',
+              'builtin-performance':
+                'Optimize all code for performance. Use React.memo, useMemo, useCallback where beneficial. Lazy-load heavy components. Avoid unnecessary re-renders. Use virtualization for long lists.',
+              'builtin-mobile':
+                'Make all UIs fully responsive and mobile-first. Touch targets must be at least 44x44px. Use responsive typography. Test layouts at 375px, 768px, and 1280px widths.',
+            };
+
+            const skillInstructions: string[] = [];
+
+            for (const skillId of agent.skills as string[]) {
+              if (BUILTIN_SKILL_INSTRUCTIONS[skillId]) {
+                skillInstructions.push(BUILTIN_SKILL_INSTRUCTIONS[skillId]);
+              }
+            }
+
+            if (skillInstructions.length > 0) {
+              agentPrompt += '\n\nAdditional constraints:\n' + skillInstructions.map((s) => `- ${s}`).join('\n');
+            }
+          }
+
+          customAgentSystemPrompt = agentPrompt;
+          logger.info(`Using custom agent "${agent.name}" (${customAgentId})`);
+        }
+      }
+    } catch (agentErr) {
+      logger.warn('Failed to resolve custom agent, continuing without it:', agentErr);
+    }
+  }
 
   // Determine if agent mode should be active for this request
   const useAgentMode = shouldUseAgentMode({ agentMode });
@@ -874,6 +942,7 @@ async function chatAction({ context, request }: ActionFunctionArgs) {
               onErrorValidation: (event) => dataStream.writeData({ veyra_event: event }),
               operationType: blueprintMode ? ('blueprint' as const) : undefined,
               modelRoutingConfig,
+              customSystemPrompt: customAgentSystemPrompt,
             });
 
             result.mergeIntoDataStream(dataStream, { sendReasoning: enableThinking });
@@ -925,6 +994,7 @@ async function chatAction({ context, request }: ActionFunctionArgs) {
           onErrorValidation: (event) => dataStream.writeData({ veyra_event: event }),
           operationType: blueprintMode ? ('blueprint' as const) : undefined,
           modelRoutingConfig,
+          customSystemPrompt: customAgentSystemPrompt,
           ...(blueprintMode ? { phaseWise: true } : {}),
         });
 

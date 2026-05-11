@@ -375,6 +375,13 @@ export const Menu = () => {
                   <span className={selectionMode ? 'i-ph:x h-4 w-4' : 'i-ph:check-square h-4 w-4'} />
                 </button>
               </div>
+              <a
+                href="/agents"
+                className="flex gap-2 items-center text-veyra-elements-textSecondary hover:text-veyra-elements-textPrimary hover:bg-veyra-elements-background-depth-2 rounded-lg px-3 py-2 transition-colors border border-veyra-elements-borderColor text-sm"
+              >
+                <span className="inline-block i-ph:robot h-4 w-4" />
+                <span className="font-medium">Custom Agents</span>
+              </a>
               <div className="relative w-full">
                 <div className="absolute left-3 top-1/2 -translate-y-1/2">
                   <span className="i-ph:magnifying-glass h-4 w-4 text-veyra-elements-textTertiary" />

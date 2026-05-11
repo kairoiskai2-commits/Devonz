@@ -266,6 +266,12 @@ export async function streamText(props: {
 
   /** Callback invoked for each error-validation event from the phase pipeline. Used by api.chat to emit SSE events. */
   onErrorValidation?: (event: import('~/types/streaming-events').ErrorValidationEvent) => void;
+
+  /**
+   * Optional system prompt injected by a custom agent, prepended before the default prompt.
+   * Use this to personalize behavior without replacing the full system prompt.
+   */
+  customSystemPrompt?: string;
 }) {
   const {
     messages,
@@ -288,6 +294,7 @@ export async function streamText(props: {
   const phaseWise = props.phaseWise ?? false;
   const onTextDelta = props.onTextDelta;
   const onErrorValidation = props.onErrorValidation;
+  const customSystemPrompt = props.customSystemPrompt;
 
   let currentModel = DEFAULT_MODEL;
   let currentProvider = DEFAULT_PROVIDER.name;
@@ -341,6 +348,7 @@ export async function streamText(props: {
   );
 
   let systemPrompt =
+    (customSystemPrompt ? `<custom_agent_instructions>\n${customSystemPrompt}\n</custom_agent_instructions>\n\n` : '') +
     PromptLibrary.getPromptFromLibrary(promptId || 'default', {
       cwd: WORK_DIR,
       allowedHtmlElements: allowedHTMLElements,

@@ -162,6 +162,65 @@ export const snapshots = sqliteTable('snapshots', {
 
 /*
  * ---------------------------------------------------------------------------
+ * agents
+ * ---------------------------------------------------------------------------
+ */
+export const agents = sqliteTable(
+  'agents',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id').notNull(),
+    name: text('name').notNull(),
+    description: text('description'),
+    systemPrompt: text('system_prompt').notNull(),
+    model: text('model'),
+    provider: text('provider'),
+    avatar: text('avatar').default('🤖'),
+    skills: text('skills', { mode: 'json' }).$type<string[]>().default([]),
+    isPublic: integer('is_public', { mode: 'boolean' }).notNull().default(false),
+    createdAt: text('created_at')
+      .notNull()
+      .default(sql`(datetime('now'))`),
+    updatedAt: text('updated_at')
+      .notNull()
+      .default(sql`(datetime('now'))`),
+  },
+  (table) => [
+    index('idx_agents_user_id').on(table.userId),
+    index('idx_agents_created_at').on(table.createdAt),
+  ],
+);
+
+/*
+ * ---------------------------------------------------------------------------
+ * agentSkills
+ * ---------------------------------------------------------------------------
+ */
+export const agentSkills = sqliteTable(
+  'agent_skills',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id'),
+    name: text('name').notNull(),
+    description: text('description'),
+    instructions: text('instructions').notNull(),
+    category: text('category').default('custom'),
+    isBuiltin: integer('is_builtin', { mode: 'boolean' }).notNull().default(false),
+    createdAt: text('created_at')
+      .notNull()
+      .default(sql`(datetime('now'))`),
+    updatedAt: text('updated_at')
+      .notNull()
+      .default(sql`(datetime('now'))`),
+  },
+  (table) => [
+    index('idx_agent_skills_user_id').on(table.userId),
+    index('idx_agent_skills_category').on(table.category),
+  ],
+);
+
+/*
+ * ---------------------------------------------------------------------------
  * deployments
  * ---------------------------------------------------------------------------
  */

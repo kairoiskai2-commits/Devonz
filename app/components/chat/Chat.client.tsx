@@ -361,6 +361,7 @@ export const ChatImpl = memo(
         agentMode: agentState.settings.enabled,
         ...(blueprintMode ? { blueprintMode: true } : {}),
         ...(Object.keys(modelRoutingConfig).length > 0 ? { modelRoutingConfig } : {}),
+        ...(searchParams.get('agentId') ? { customAgentId: searchParams.get('agentId') } : {}),
       },
       maxSteps: mcpSettings.maxLLMSteps,
       sendExtraMessageFields: true,

@@ -85,6 +85,9 @@ type Pages = {
   "/api/version-check": {
     params: {};
   };
+  "/api/agent-skills": {
+    params: {};
+  };
   "/api/github-stats": {
     params: {};
   };
@@ -178,6 +181,14 @@ type Pages = {
   "/api/v1/chat": {
     params: {};
   };
+  "/api/agents": {
+    params: {};
+  };
+  "/api/agents/:id": {
+    params: {
+      "id": string;
+    };
+  };
   "/api/auth/*": {
     params: {
       "*": string;
@@ -211,6 +222,9 @@ type Pages = {
       "id": string;
     };
   };
+  "/agents": {
+    params: {};
+  };
   "/signup": {
     params: {};
   };
@@ -233,7 +247,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/api/configured-providers" | "/api/auto-deploy-status" | "/api/system/diagnostics" | "/api/mcp-update-config" | "/api/runtime/terminal" | "/api/system/disk-info" | "/api/export-api-keys" | "/api/github-branches" | "/api/github-template" | "/api/gitlab-branches" | "/api/gitlab-projects" | "/api/preview-proxy/*" | "/api/system/git-info" | "/api/auth-providers" | "/api/check-env-keys" | "/api/netlify-deploy" | "/api/runtime/search" | "/api/vercel-domains" | "/api/check-env-key" | "/api/sentry-tunnel" | "/api/supabase-user" | "/api/vercel-deploy" | "/api/version-check" | "/api/github-stats" | "/api/netlify-user" | "/api/runtime/exec" | "/api/vercel-proxy" | "/api/auto-deploy" | "/api/git-proxy/*" | "/api/github-user" | "/api/runtime/git" | "/api/vercel-user" | "/forgot-password" | "/api/bug-report" | "/api/db/migrate" | "/api/runtime/fs" | "/api/web-search" | "/reset-password" | "/api/git-clone" | "/api/mcp-check" | "/api/v1/status" | "/preview/:port" | "/api/db/chats" | "/api/db/chats/:id" | "/api/enhancer" | "/api/git-info" | "/api/supabase" | "/api/supabase/variables" | "/api/supabase/query" | "/api/encrypt" | "/api/llmcall" | "/api/v1/chat" | "/api/auth/*" | "/api/deploy" | "/api/health" | "/api/models" | "/api/models/:provider" | "/api/update" | "/templates" | "/api/chat" | "/chat/:id" | "/signup" | "/admin" | "/login" | "/git" | "/*";
+    page: "/" | "/api/configured-providers" | "/api/auto-deploy-status" | "/api/system/diagnostics" | "/api/mcp-update-config" | "/api/runtime/terminal" | "/api/system/disk-info" | "/api/export-api-keys" | "/api/github-branches" | "/api/github-template" | "/api/gitlab-branches" | "/api/gitlab-projects" | "/api/preview-proxy/*" | "/api/system/git-info" | "/api/auth-providers" | "/api/check-env-keys" | "/api/netlify-deploy" | "/api/runtime/search" | "/api/vercel-domains" | "/api/check-env-key" | "/api/sentry-tunnel" | "/api/supabase-user" | "/api/vercel-deploy" | "/api/version-check" | "/api/agent-skills" | "/api/github-stats" | "/api/netlify-user" | "/api/runtime/exec" | "/api/vercel-proxy" | "/api/auto-deploy" | "/api/git-proxy/*" | "/api/github-user" | "/api/runtime/git" | "/api/vercel-user" | "/forgot-password" | "/api/bug-report" | "/api/db/migrate" | "/api/runtime/fs" | "/api/web-search" | "/reset-password" | "/api/git-clone" | "/api/mcp-check" | "/api/v1/status" | "/preview/:port" | "/api/db/chats" | "/api/db/chats/:id" | "/api/enhancer" | "/api/git-info" | "/api/supabase" | "/api/supabase/variables" | "/api/supabase/query" | "/api/encrypt" | "/api/llmcall" | "/api/v1/chat" | "/api/agents" | "/api/agents/:id" | "/api/auth/*" | "/api/deploy" | "/api/health" | "/api/models" | "/api/models/:provider" | "/api/update" | "/templates" | "/api/chat" | "/chat/:id" | "/agents" | "/signup" | "/admin" | "/login" | "/git" | "/*";
   };
   "routes/api.configured-providers.ts": {
     id: "routes/api.configured-providers";
@@ -326,6 +340,10 @@ type RouteFiles = {
   "routes/api.version-check.ts": {
     id: "routes/api.version-check";
     page: "/api/version-check";
+  };
+  "routes/api.agent-skills.ts": {
+    id: "routes/api.agent-skills";
+    page: "/api/agent-skills";
   };
   "routes/api.github-stats.ts": {
     id: "routes/api.github-stats";
@@ -443,6 +461,14 @@ type RouteFiles = {
     id: "routes/api.v1.chat";
     page: "/api/v1/chat";
   };
+  "routes/api.agents.ts": {
+    id: "routes/api.agents";
+    page: "/api/agents" | "/api/agents/:id";
+  };
+  "routes/api.agents.$id.ts": {
+    id: "routes/api.agents.$id";
+    page: "/api/agents/:id";
+  };
   "routes/api.auth.$.ts": {
     id: "routes/api.auth.$";
     page: "/api/auth/*";
@@ -482,6 +508,10 @@ type RouteFiles = {
   "routes/_index.tsx": {
     id: "routes/_index";
     page: "/";
+  };
+  "routes/agents.tsx": {
+    id: "routes/agents";
+    page: "/agents";
   };
   "routes/signup.tsx": {
     id: "routes/signup";
@@ -530,6 +560,7 @@ type RouteModules = {
   "routes/api.supabase-user": typeof import("./app/routes/api.supabase-user.ts");
   "routes/api.vercel-deploy": typeof import("./app/routes/api.vercel-deploy.ts");
   "routes/api.version-check": typeof import("./app/routes/api.version-check.ts");
+  "routes/api.agent-skills": typeof import("./app/routes/api.agent-skills.ts");
   "routes/api.github-stats": typeof import("./app/routes/api.github-stats.ts");
   "routes/api.netlify-user": typeof import("./app/routes/api.netlify-user.ts");
   "routes/api.runtime.exec": typeof import("./app/routes/api.runtime.exec.ts");
@@ -559,6 +590,8 @@ type RouteModules = {
   "routes/api.encrypt": typeof import("./app/routes/api.encrypt.ts");
   "routes/api.llmcall": typeof import("./app/routes/api.llmcall.ts");
   "routes/api.v1.chat": typeof import("./app/routes/api.v1.chat.ts");
+  "routes/api.agents": typeof import("./app/routes/api.agents.ts");
+  "routes/api.agents.$id": typeof import("./app/routes/api.agents.$id.ts");
   "routes/api.auth.$": typeof import("./app/routes/api.auth.$.ts");
   "routes/api.deploy": typeof import("./app/routes/api.deploy.ts");
   "routes/api.health": typeof import("./app/routes/api.health.ts");
@@ -569,6 +602,7 @@ type RouteModules = {
   "routes/api.chat": typeof import("./app/routes/api.chat.ts");
   "routes/chat.$id": typeof import("./app/routes/chat.$id.tsx");
   "routes/_index": typeof import("./app/routes/_index.tsx");
+  "routes/agents": typeof import("./app/routes/agents.tsx");
   "routes/signup": typeof import("./app/routes/signup.tsx");
   "routes/admin": typeof import("./app/routes/admin.tsx");
   "routes/login": typeof import("./app/routes/login.tsx");

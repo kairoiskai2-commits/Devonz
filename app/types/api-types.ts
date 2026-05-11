@@ -116,6 +116,7 @@ export const chatRequestSchema = z.object({
   agentMode: z.boolean().optional(),
   modelRoutingConfig: modelRoutingConfigSchema,
   blueprintMode: z.boolean().optional(),
+  customAgentId: z.string().optional(),
 });
 
 /** Validated chat request type inferred from Zod schema */

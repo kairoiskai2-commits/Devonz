@@ -63,6 +63,24 @@ const REACT_EXTRA_PACKAGES: Record<string, string> = {
   sonner: '^1.7.0',
   'class-variance-authority': '^0.7.0',
   recharts: '^2.15.0',
+  'react-icons': '^5.4.0',
+  '@tanstack/react-table': '^8.21.3',
+  'react-hot-toast': '^2.5.2',
+  'react-spinners': '^0.15.0',
+};
+
+const VITE_PLUGIN_PACKAGES: Record<string, string> = {
+  '@vitejs/plugin-react': '^4.3.4',
+  '@vitejs/plugin-react-swc': '^3.7.2',
+  vite: '^6.3.4',
+  'vite-plugin-svgr': '^4.3.0',
+  'vite-tsconfig-paths': '^5.1.4',
+  '@tailwindcss/vite': '^4.1.4',
+  '@tailwindcss/postcss': '^4.1.4',
+  tailwindcss: '^4.1.4',
+  autoprefixer: '^10.4.21',
+  postcss: '^8.5.3',
+  typescript: '^5.8.3',
 };
 
 const REACT_RUNTIME_EXTRA_PACKAGES: Record<string, string> = {
@@ -132,6 +150,7 @@ const AUTO_INSTALLABLE_PACKAGE_VERSIONS: Record<string, string> = {
   ...SOLIDJS_COMBINED_PACKAGES,
   ...ANGULAR_COMBINED_PACKAGES,
   ...REACT_RUNTIME_EXTRA_PACKAGES,
+  ...VITE_PLUGIN_PACKAGES,
 };
 
 export {
@@ -147,6 +166,7 @@ export {
   SOLIDJS_COMBINED_PACKAGES,
   ANGULAR_EXTRA_PACKAGES,
   ANGULAR_COMBINED_PACKAGES,
+  VITE_PLUGIN_PACKAGES,
   AUTO_INSTALLABLE_PACKAGE_VERSIONS,
 };
 
