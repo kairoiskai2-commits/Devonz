@@ -572,17 +572,21 @@ export const BaseChat = React.memo(
               ) : (
                 <>
                   {!chatStarted && (
-                    <div id="intro" className="mt-[8vh] max-w-2xl mx-auto text-center px-4 lg:px-0 relative">
-                      {/* Liquid Metal 3D Text */}
-                      <div className="liquid-metal-container">
-                        <h1 className="liquid-metal-text" aria-label="Devonz">
-                          Devonz
-                        </h1>
+                    <div id="intro" className="mt-[6vh] max-w-2xl mx-auto text-center px-4 lg:px-0" style={{ position: 'relative', zIndex: 1 }}>
+                      {/* Hero Badge */}
+                      <div className="veyra-hero-badge">
+                        ✨ Design, build and ship instantly
                       </div>
 
-                      {/* Subtitle below the 3D text */}
-                      <p className="text-base lg:text-lg text-[#8badd4] animate-fade-in animation-delay-200">
-                        Build anything with AI. Just describe what you want.
+                      {/* Hero Title */}
+                      <h1 className="veyra-hero-title" aria-label="Build apps with AI that feel production-ready">
+                        Build apps with AI that feel{' '}
+                        <span className="veyra-gradient-text">production-ready.</span>
+                      </h1>
+
+                      {/* Subtitle */}
+                      <p className="veyra-hero-sub">
+                        Create beautiful full-stack apps, dashboards and landing pages with modern AI-powered workflows.
                       </p>
                     </div>
                   )}

@@ -39,9 +39,18 @@ export function Header() {
             </button>
           )}
           {!sidebarOpen && (
-            <span className="text-sm font-semibold text-devonz-elements-textPrimary select-none tracking-tight">
-              Devonz
-            </span>
+            <div className="flex items-center gap-2 select-none">
+              <div className="veyra-logo-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 4L10 16L17 4" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M6.5 4L10 10.5L13.5 4" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              <div className="flex flex-col leading-none gap-0.5">
+                <span className="text-[15px] font-semibold text-white tracking-tight">Veyra</span>
+                <span className="text-[10px] text-devonz-elements-textTertiary font-normal">AI App Builder</span>
+              </div>
+            </div>
           )}
         </div>
         {chat.started && (

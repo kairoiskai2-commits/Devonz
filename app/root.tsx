@@ -93,24 +93,24 @@ const inlineThemeCode = stripIndents`
 const criticalCSS = `
   :root, :root[data-theme=dark] {
     --devonz-elements-borderColor: rgba(255,255,255,0.08);
-    --devonz-elements-borderColorActive: #3b82f6;
-    --devonz-elements-bg-depth-1: #0b0d13;
-    --devonz-elements-bg-depth-2: #0b0d13;
-    --devonz-elements-bg-depth-3: #1a2332;
+    --devonz-elements-borderColorActive: #7c3aed;
+    --devonz-elements-bg-depth-1: #09090b;
+    --devonz-elements-bg-depth-2: #0f0f12;
+    --devonz-elements-bg-depth-3: #161620;
     --devonz-elements-bg-depth-4: rgba(255,255,255,0.03);
-    --devonz-elements-textPrimary: #e6edf3;
-    --devonz-elements-textSecondary: #8b949e;
-    --devonz-elements-textTertiary: #6e7681;
-    --devonz-elements-prompt-background: rgba(19,26,36,0.9);
-    --devonz-chat-bg: linear-gradient(145deg,rgba(30,58,95,0.15),rgba(26,26,26,0.95));
-    --header-height: 54px;
+    --devonz-elements-textPrimary: #f1f5f9;
+    --devonz-elements-textSecondary: #94a3b8;
+    --devonz-elements-textTertiary: #64748b;
+    --devonz-elements-prompt-background: rgba(15,15,18,0.88);
+    --devonz-chat-bg: transparent;
+    --header-height: 62px;
     --chat-max-width: 42rem;
     --chat-min-width: min(533px,100vw);
   }
   :root[data-theme=light] {
     --devonz-elements-borderColor: #131a241a;
-    --devonz-elements-borderColorActive: #2563eb;
-    --devonz-elements-bg-depth-1: #FFFFFF;
+    --devonz-elements-borderColorActive: #7c3aed;
+    --devonz-elements-bg-depth-1: #fafafa;
     --devonz-elements-bg-depth-2: #f0f4f8;
     --devonz-elements-bg-depth-3: #bcccdc;
     --devonz-elements-bg-depth-4: #131a240d;
@@ -119,12 +119,13 @@ const criticalCSS = `
     --devonz-elements-textTertiary: #627d98;
     --devonz-elements-prompt-background: #FFFFFFcc;
     --devonz-chat-bg: linear-gradient(145deg,rgba(200,215,235,0.3),rgba(245,245,245,0.95));
-    --header-height: 54px;
+    --header-height: 62px;
     --chat-max-width: 42rem;
     --chat-min-width: min(533px,100vw);
   }
   html, body {
     height: 100%;
+    min-height: 100dvh;
     width: 100%;
     overflow: hidden;
     background-color: var(--devonz-elements-bg-depth-1);
@@ -132,6 +133,98 @@ const criticalCSS = `
   }
   html[data-theme=dark] { color-scheme: dark; }
   html[data-theme=light] { color-scheme: light; }
+
+  @keyframes veyra-blob-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.65; transform: scale(1.06); }
+  }
+  @keyframes veyra-fade-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .veyra-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    animation: veyra-blob-pulse 5s ease-in-out infinite;
+  }
+  .veyra-blob-purple {
+    top: -120px; left: -90px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(124,58,237,0.22) 0%, transparent 70%);
+    animation-delay: 0s;
+  }
+  .veyra-blob-blue {
+    bottom: -50px; right: -70px;
+    width: 460px; height: 460px;
+    background: radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 70%);
+    animation-delay: 1.5s;
+  }
+  .veyra-blob-pink {
+    top: 40%; left: 30%;
+    width: 340px; height: 340px;
+    background: radial-gradient(circle, rgba(236,72,153,0.1) 0%, transparent 70%);
+    animation-delay: 3s;
+  }
+  .veyra-dot-grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    background-image: radial-gradient(rgba(255,255,255,0.9) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .veyra-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(20px);
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 22px;
+    animation: veyra-fade-up 0.45s ease forwards;
+    cursor: default;
+    white-space: nowrap;
+  }
+  .veyra-hero-title {
+    font-size: clamp(32px, 5.5vw, 68px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.06;
+    color: #ffffff;
+    margin-bottom: 18px;
+    animation: veyra-fade-up 0.45s ease forwards 0.08s;
+  }
+  .veyra-gradient-text {
+    background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 50%, #f472b6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .veyra-hero-sub {
+    color: rgba(255,255,255,0.42);
+    font-size: 16px;
+    line-height: 1.85;
+    max-width: 560px;
+    margin: 0 auto 10px;
+    animation: veyra-fade-up 0.45s ease forwards 0.16s;
+  }
+  .veyra-logo-icon {
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #7c3aed, #3b82f6, #ec4899);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(124,58,237,0.4);
+    flex-shrink: 0;
+  }
 `;
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -157,7 +250,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <noscript>
           <p style={{ padding: '2rem', color: '#fff', background: '#0a0a0a', textAlign: 'center' }}>
-            JavaScript is required to use Devonz.
+            JavaScript is required to use Veyra.
           </p>
         </noscript>
         <div id="root" className="w-full h-full">
@@ -180,7 +273,7 @@ export function SentryErrorBoundary() {
   Sentry.captureException(error);
 
   useEffect(() => {
-    console.error('[Devonz:RouteError]', {
+    console.error('[Veyra:RouteError]', {
       type: isRouteErrorResponse(error) ? 'route-response' : 'exception',
       timestamp: new Date().toISOString(),
       ...(isRouteErrorResponse(error)
