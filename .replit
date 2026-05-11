@@ -43,4 +43,4 @@ build = ["pnpm", "run", "build"]
 
 [userenv.shared]
 OPENAI_LIKE_API_BASE_URL = "https://aiapiv2.pekpik.com/v1"
-OPENAI_LIKE_API_MODELS = "claude-opus-4-7:200000;smart-chat:200000"
+OPENAI_LIKE_API_MODELS = "claude-opus-4-7:200000;gemini-2.5-flash:1000000;smart-chat:200000;gpt-5.5:200000"

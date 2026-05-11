@@ -59,8 +59,20 @@ export default class OpenAILikeProvider extends BaseProvider {
       maxTokenAllowed: 200000,
     },
     {
+      name: 'gemini-2.5-flash',
+      label: 'Gemini 2.5 Flash (Pekpik)',
+      provider: 'OpenAILike',
+      maxTokenAllowed: 1000000,
+    },
+    {
       name: 'smart-chat',
       label: 'Smart Chat (Pekpik)',
+      provider: 'OpenAILike',
+      maxTokenAllowed: 200000,
+    },
+    {
+      name: 'gpt-5.5',
+      label: 'GPT 5.5 (Pekpik)',
       provider: 'OpenAILike',
       maxTokenAllowed: 200000,
     },
