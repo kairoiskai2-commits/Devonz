@@ -38,7 +38,7 @@ async function checkEnvKeysLoader({ context, request }: LoaderFunctionArgs) {
 }
 
 export const loader = withSecurity(checkEnvKeysLoader, {
-  auth: AUTH_PRESETS.authenticated,
+  auth: AUTH_PRESETS.public,
   allowedMethods: ['GET'],
   rateLimit: false,
 });
