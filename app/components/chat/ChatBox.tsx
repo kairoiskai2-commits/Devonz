@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-import React, { useState, useCallback, lazy, Suspense } from 'react';
-=======
 import React, { useState, useCallback, useEffect, lazy, Suspense } from 'react';
 import { useStore } from '@nanostores/react';
->>>>>>> e895246 (fresh repo)
 import { clientLazy } from '~/utils/react';
 import { cn } from '~/utils/cn';
 import { PROVIDER_LIST } from '~/utils/constants';
@@ -22,10 +18,7 @@ import { ChatModeSelector } from './ChatModeSelector';
 import { AgentToggle } from './AgentToggle';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { TabType } from '~/components/@settings/core/types';
-<<<<<<< HEAD
-=======
 import { chatSavedAt } from '~/lib/persistence/chatSavedAtom';
->>>>>>> e895246 (fresh repo)
 
 const SupabaseConnection = lazy(() => import('./SupabaseConnection').then((m) => ({ default: m.SupabaseConnection })));
 const ExpoQrModal = lazy(() => import('~/components/workbench/ExpoQrModal').then((m) => ({ default: m.ExpoQrModal })));
@@ -90,8 +83,6 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [settingsInitialTab, setSettingsInitialTab] = useState<TabType | undefined>(undefined);
   const [showMoreTools, setShowMoreTools] = useState(false);
-<<<<<<< HEAD
-=======
   const [showSaved, setShowSaved] = useState(false);
 
   const savedAt = useStore(chatSavedAt);
@@ -102,7 +93,6 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
     const t = setTimeout(() => setShowSaved(false), 2500);
     return () => clearTimeout(t);
   }, [savedAt]);
->>>>>>> e895246 (fresh repo)
 
   const handleOpenSettings = useCallback((tab?: string) => {
     setIsModelSelectorOpen(false);
@@ -393,8 +383,6 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
               </IconButton>
             </div>
 
-<<<<<<< HEAD
-=======
             {/* Save checkpoint indicator */}
             <AnimatePresence>
               {showSaved && (
@@ -411,7 +399,6 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
               )}
             </AnimatePresence>
 
->>>>>>> e895246 (fresh repo)
             <Suspense>
               <SupabaseConnection />
               <ExpoQrModal open={props.qrModalOpen} onClose={() => props.setQrModalOpen(false)} />

@@ -26,11 +26,7 @@ export default function LlmErrorAlert({ alert, clearAlert }: Props) {
   const getErrorMessage = () => {
     switch (errorType) {
       case 'authentication':
-<<<<<<< HEAD
-        return `Authentication failed with ${provider}. Please check your API key.`;
-=======
         return `Your API key was rejected by ${provider}. Go to Settings → Providers to update it.`;
->>>>>>> e895246 (fresh repo)
       case 'rate_limit':
         return `Rate limit exceeded for ${provider}. Please wait before retrying.`;
       case 'quota':

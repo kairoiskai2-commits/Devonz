@@ -205,13 +205,10 @@ export const ChatImpl = memo(
     const sendingRef = useRef(false);
     const pollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-<<<<<<< HEAD
-=======
     // Always-current refs used by onFinish and beforeunload to guarantee saves
     const latestMessagesRef = useRef<Message[]>([]);
     const storeMessageHistoryRef = useRef(storeMessageHistory);
 
->>>>>>> e895246 (fresh repo)
     useEffect(() => {
       return () => {
         if (pollTimeoutRef.current !== null) {
@@ -221,11 +218,6 @@ export const ChatImpl = memo(
       };
     }, []);
 
-<<<<<<< HEAD
-    planModeRef.current = planMode;
-    modelRef.current = model;
-    providerRef.current = provider;
-=======
     // Keep storeMessageHistory ref fresh every render (it's not memoised upstream)
     planModeRef.current = planMode;
     modelRef.current = model;
@@ -246,7 +238,6 @@ export const ChatImpl = memo(
 
       return () => window.removeEventListener('beforeunload', handleBeforeUnload);
     }, []);
->>>>>>> e895246 (fresh repo)
 
     const [selectedElement, setSelectedElement] = useState<ElementInfo | null>(null);
     const mcpSettings = useStore(mcpStore).settings;
@@ -442,8 +433,6 @@ export const ChatImpl = memo(
 
         logger.debug('Finished streaming');
 
-<<<<<<< HEAD
-=======
         // Force-save on stream completion — bypasses the 50ms sampler so a refresh
         // immediately after the AI finishes doesn't lose the conversation.
         // setTimeout(0) lets React flush the final messages state update first.
@@ -457,7 +446,6 @@ export const ChatImpl = memo(
           }
         }, 0);
 
->>>>>>> e895246 (fresh repo)
         // Finalize any actions stuck in 'running' (e.g. truncated closing tags)
         workbenchStore.finalizeRunningActions();
 
@@ -563,12 +551,9 @@ export const ChatImpl = memo(
     }, [initialMessages.length]);
 
     useEffect(() => {
-<<<<<<< HEAD
-=======
       // Keep the always-current ref up to date for onFinish and beforeunload
       latestMessagesRef.current = messages;
 
->>>>>>> e895246 (fresh repo)
       processSampledMessages({
         messages,
         initialMessages,
@@ -670,11 +655,7 @@ export const ChatImpl = memo(
 
         if (errorInfo.statusCode === 401 || errorInfo.message.toLowerCase().includes('api key')) {
           errorType = 'authentication';
-<<<<<<< HEAD
-          title = 'Authentication Error';
-=======
           title = 'API Key Error';
->>>>>>> e895246 (fresh repo)
         } else if (errorInfo.statusCode === 429 || errorInfo.message.toLowerCase().includes('rate limit')) {
           errorType = 'rate_limit';
           title = 'Rate Limit Exceeded';
