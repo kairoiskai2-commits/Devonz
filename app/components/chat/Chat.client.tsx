@@ -41,6 +41,8 @@ import { planActionAtom, clearPlanAction } from '~/lib/stores/plan';
 import { modelRoutingConfigStore, blueprintModeStore } from '~/lib/stores/settings';
 import { resetStreamEventState } from '~/lib/stores/stream-event-router';
 import type { PlanPhase } from '~/lib/agent/types';
+import { backgroundModeAtom } from '~/lib/stores/backgroundMode';
+import { useBackgroundChat } from '~/lib/hooks/useBackgroundChat';
 
 const logger = createScopedLogger('Chat');
 
@@ -244,6 +246,8 @@ export const ChatImpl = memo(
     const agentState = useStore(agentModeStore);
     const modelRoutingConfig = useStore(modelRoutingConfigStore);
     const blueprintMode = useStore(blueprintModeStore);
+    const isBackgroundMode = useStore(backgroundModeAtom);
+    const { sendBackgroundMessage } = useBackgroundChat();
 
     // Restore plan mode from localStorage when chat changes, or carry over pre-chat state
     useEffect(() => {
@@ -943,14 +947,30 @@ export const ChatImpl = memo(
               ? { experimental_attachments: await filesToAttachments(uploadedFiles) }
               : undefined;
 
-          append(
-            {
-              role: 'user',
-              content: messageText,
-              parts: createMessageParts(messageText, imageDataList),
-            },
-            attachmentOptions,
-          );
+          if (isBackgroundMode) {
+            setMessages([
+              ...messages,
+              { id: `${Date.now()}`, role: 'user', content: messageText, parts: createMessageParts(messageText, imageDataList) },
+            ]);
+            await sendBackgroundMessage({
+              messages: [...messages, { role: 'user', content: finalMessageContent }].map((m) => ({
+                role: m.role as string,
+                content: typeof m.content === 'string' ? m.content : '',
+              })),
+              model,
+              provider: provider.name,
+              chatId: currentChatId ?? undefined,
+            });
+          } else {
+            append(
+              {
+                role: 'user',
+                content: messageText,
+                parts: createMessageParts(messageText, imageDataList),
+              },
+              attachmentOptions,
+            );
+          }
 
           workbenchStore.resetAllFileModifications();
         } else {
@@ -961,14 +981,30 @@ export const ChatImpl = memo(
               ? { experimental_attachments: await filesToAttachments(uploadedFiles) }
               : undefined;
 
-          append(
-            {
-              role: 'user',
-              content: messageText,
-              parts: createMessageParts(messageText, imageDataList),
-            },
-            attachmentOptions,
-          );
+          if (isBackgroundMode) {
+            setMessages([
+              ...messages,
+              { id: `${Date.now()}`, role: 'user', content: messageText, parts: createMessageParts(messageText, imageDataList) },
+            ]);
+            await sendBackgroundMessage({
+              messages: [...messages, { role: 'user', content: finalMessageContent }].map((m) => ({
+                role: m.role as string,
+                content: typeof m.content === 'string' ? m.content : '',
+              })),
+              model,
+              provider: provider.name,
+              chatId: currentChatId ?? undefined,
+            });
+          } else {
+            append(
+              {
+                role: 'user',
+                content: messageText,
+                parts: createMessageParts(messageText, imageDataList),
+              },
+              attachmentOptions,
+            );
+          }
         }
 
         setInput('');

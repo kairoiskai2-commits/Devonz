@@ -29,58 +29,65 @@ interface Skill {
 }
 
 const PROVIDER_OPTIONS = [
-  { value: 'OpenRouter', label: 'OpenRouter' },
-  { value: 'OpenAI', label: 'OpenAI' },
-  { value: 'Anthropic', label: 'Anthropic' },
-  { value: 'Google', label: 'Google' },
-  { value: 'Groq', label: 'Groq' },
-  { value: 'OpenAILike', label: 'Custom (OpenAI-Like)' },
+  { value: 'Pollinations', label: 'Pollinations (Free — no API key)' },
+  { value: 'Puter', label: 'Puter (Free — no API key)' },
+  { value: 'OpenAILike', label: 'Custom endpoint (bring your own)' },
+  { value: 'OpenRouter', label: 'OpenRouter (API key required)' },
+  { value: 'OpenAI', label: 'OpenAI (API key required)' },
+  { value: 'Anthropic', label: 'Anthropic (API key required)' },
+  { value: 'Google', label: 'Google (API key required)' },
 ];
 
 const MODELS_BY_PROVIDER: Record<string, Array<{ value: string; label: string }>> = {
+  Pollinations: [
+    { value: 'openai', label: 'OpenAI (best general — free)' },
+    { value: 'openai-large', label: 'OpenAI Large (free)' },
+    { value: 'claude', label: 'Claude (free)' },
+    { value: 'claude-large', label: 'Claude Large (free)' },
+    { value: 'claude-opus-4.7', label: 'Claude Opus 4.7 (free)' },
+    { value: 'gemini', label: 'Gemini (free)' },
+    { value: 'gemini-large', label: 'Gemini Large (free)' },
+    { value: 'deepseek', label: 'DeepSeek (free)' },
+    { value: 'deepseek-pro', label: 'DeepSeek Pro (free)' },
+    { value: 'qwen-coder', label: 'Qwen Coder (best coding — free)' },
+    { value: 'qwen-coder-large', label: 'Qwen Coder Large (free)' },
+    { value: 'llama', label: 'Llama (free)' },
+    { value: 'mistral-large', label: 'Mistral Large (free)' },
+    { value: 'grok', label: 'Grok (free)' },
+    { value: 'grok-large', label: 'Grok Large (free)' },
+  ],
+  Puter: [
+    { value: 'claude-opus-4-5', label: 'Claude Opus 4.5 (free)' },
+    { value: 'gpt-4o', label: 'GPT-4o (free)' },
+    { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash (free)' },
+  ],
+  OpenAILike: [
+    { value: 'claude-opus-4-7', label: 'Claude Opus 4.7' },
+    { value: 'gpt-4o', label: 'GPT-4o' },
+    { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
+    { value: 'smart-chat', label: 'Custom model' },
+  ],
   OpenRouter: [
-    { value: 'anthropic/claude-opus-4-5', label: 'Claude Opus 4.5 (best coding)' },
-    { value: 'anthropic/claude-sonnet-4-5', label: 'Claude Sonnet 4.5' },
+    { value: 'anthropic/claude-opus-4-5', label: 'Claude Opus 4.5' },
     { value: 'anthropic/claude-3.5-sonnet', label: 'Claude 3.5 Sonnet' },
     { value: 'openai/gpt-4o', label: 'GPT-4o' },
-    { value: 'openai/o3-mini', label: 'o3-mini (reasoning)' },
-    { value: 'openai/o1', label: 'o1 (advanced reasoning)' },
     { value: 'google/gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
-    { value: 'google/gemini-2.5-pro', label: 'Gemini 2.5 Pro' },
     { value: 'deepseek/deepseek-coder', label: 'DeepSeek Coder' },
-    { value: 'deepseek/deepseek-r1', label: 'DeepSeek R1 (reasoning)' },
     { value: 'qwen/qwen-2.5-coder-32b-instruct', label: 'Qwen 2.5 Coder 32B' },
-    { value: 'meta-llama/llama-3.3-70b-instruct', label: 'Llama 3.3 70B' },
-    { value: 'mistralai/mistral-large', label: 'Mistral Large' },
-    { value: 'x-ai/grok-3', label: 'Grok 3' },
   ],
   OpenAI: [
     { value: 'gpt-4o', label: 'GPT-4o' },
     { value: 'gpt-4o-mini', label: 'GPT-4o Mini' },
     { value: 'o3-mini', label: 'o3-mini' },
-    { value: 'o1', label: 'o1' },
   ],
   Anthropic: [
     { value: 'claude-opus-4-5-20251101', label: 'Claude Opus 4.5' },
-    { value: 'claude-sonnet-4-5-20251101', label: 'Claude Sonnet 4.5' },
     { value: 'claude-3-5-sonnet-20241022', label: 'Claude 3.5 Sonnet' },
     { value: 'claude-3-5-haiku-20241022', label: 'Claude 3.5 Haiku' },
   ],
   Google: [
     { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
     { value: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro' },
-    { value: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash' },
-  ],
-  Groq: [
-    { value: 'llama-3.3-70b-versatile', label: 'Llama 3.3 70B' },
-    { value: 'llama3-8b-8192', label: 'Llama 3 8B' },
-    { value: 'mixtral-8x7b-32768', label: 'Mixtral 8x7B' },
-  ],
-  OpenAILike: [
-    { value: 'claude-opus-4-7', label: 'Claude Opus 4.7 (custom endpoint)' },
-    { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash (custom endpoint)' },
-    { value: 'gpt-5.5', label: 'GPT-5.5 (custom endpoint)' },
-    { value: 'smart-chat', label: 'Smart Chat (custom endpoint)' },
   ],
 };
 
@@ -277,8 +284,8 @@ function AgentModal({
   const [isPublic, setIsPublic] = useState(agent?.isPublic ?? false);
   const [saving, setSaving] = useState(false);
   const [tab, setTab] = useState<'basic' | 'model' | 'skills'>('basic');
-  const [selectedProvider, setSelectedProvider] = useState(agent?.provider ?? 'OpenRouter');
-  const [selectedModel, setSelectedModel] = useState(agent?.model ?? 'anthropic/claude-opus-4-5');
+  const [selectedProvider, setSelectedProvider] = useState(agent?.provider ?? 'Pollinations');
+  const [selectedModel, setSelectedModel] = useState(agent?.model ?? 'openai');
 
   const toggleSkill = (skillId: string) => {
     setSelectedSkills((prev) => (prev.includes(skillId) ? prev.filter((s) => s !== skillId) : [...prev, skillId]));
@@ -670,7 +677,7 @@ export default function AgentsPage() {
 
   const fetchAgents = useCallback(async () => {
     try {
-      const res = await fetch('/api/agents');
+      const res = await fetch('/api/agents', { credentials: 'include' });
       const json = await res.json();
 
       if (json.success) {
@@ -685,7 +692,7 @@ export default function AgentsPage() {
 
   const fetchSkills = useCallback(async () => {
     try {
-      const res = await fetch('/api/agent-skills');
+      const res = await fetch('/api/agent-skills', { credentials: 'include' });
       const json = await res.json();
 
       if (json.success) {
@@ -707,6 +714,7 @@ export default function AgentsPage() {
       const res = await fetch(`/api/agents/${editingAgent.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(data),
       });
       const json = await res.json();
@@ -721,6 +729,7 @@ export default function AgentsPage() {
       const res = await fetch('/api/agents', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(data),
       });
       const json = await res.json();
@@ -738,7 +747,7 @@ export default function AgentsPage() {
     setDeletingId(id);
 
     try {
-      const res = await fetch(`/api/agents/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/agents/${id}`, { method: 'DELETE', credentials: 'include' });
       const json = await res.json();
 
       if (json.success) {

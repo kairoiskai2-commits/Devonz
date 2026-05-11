@@ -32,6 +32,14 @@ type Pages = {
   "/api/system/disk-info": {
     params: {};
   };
+  "/api/background-chat": {
+    params: {};
+  };
+  "/api/background-chat/:id": {
+    params: {
+      "id": string;
+    };
+  };
   "/api/export-api-keys": {
     params: {};
   };
@@ -247,7 +255,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/api/configured-providers" | "/api/auto-deploy-status" | "/api/system/diagnostics" | "/api/mcp-update-config" | "/api/runtime/terminal" | "/api/system/disk-info" | "/api/export-api-keys" | "/api/github-branches" | "/api/github-template" | "/api/gitlab-branches" | "/api/gitlab-projects" | "/api/preview-proxy/*" | "/api/system/git-info" | "/api/auth-providers" | "/api/check-env-keys" | "/api/netlify-deploy" | "/api/runtime/search" | "/api/vercel-domains" | "/api/check-env-key" | "/api/sentry-tunnel" | "/api/supabase-user" | "/api/vercel-deploy" | "/api/version-check" | "/api/agent-skills" | "/api/github-stats" | "/api/netlify-user" | "/api/runtime/exec" | "/api/vercel-proxy" | "/api/auto-deploy" | "/api/git-proxy/*" | "/api/github-user" | "/api/runtime/git" | "/api/vercel-user" | "/forgot-password" | "/api/bug-report" | "/api/db/migrate" | "/api/runtime/fs" | "/api/web-search" | "/reset-password" | "/api/git-clone" | "/api/mcp-check" | "/api/v1/status" | "/preview/:port" | "/api/db/chats" | "/api/db/chats/:id" | "/api/enhancer" | "/api/git-info" | "/api/supabase" | "/api/supabase/variables" | "/api/supabase/query" | "/api/encrypt" | "/api/llmcall" | "/api/v1/chat" | "/api/agents" | "/api/agents/:id" | "/api/auth/*" | "/api/deploy" | "/api/health" | "/api/models" | "/api/models/:provider" | "/api/update" | "/templates" | "/api/chat" | "/chat/:id" | "/agents" | "/signup" | "/admin" | "/login" | "/git" | "/*";
+    page: "/" | "/api/configured-providers" | "/api/auto-deploy-status" | "/api/system/diagnostics" | "/api/mcp-update-config" | "/api/runtime/terminal" | "/api/system/disk-info" | "/api/background-chat" | "/api/background-chat/:id" | "/api/export-api-keys" | "/api/github-branches" | "/api/github-template" | "/api/gitlab-branches" | "/api/gitlab-projects" | "/api/preview-proxy/*" | "/api/system/git-info" | "/api/auth-providers" | "/api/check-env-keys" | "/api/netlify-deploy" | "/api/runtime/search" | "/api/vercel-domains" | "/api/check-env-key" | "/api/sentry-tunnel" | "/api/supabase-user" | "/api/vercel-deploy" | "/api/version-check" | "/api/agent-skills" | "/api/github-stats" | "/api/netlify-user" | "/api/runtime/exec" | "/api/vercel-proxy" | "/api/auto-deploy" | "/api/git-proxy/*" | "/api/github-user" | "/api/runtime/git" | "/api/vercel-user" | "/forgot-password" | "/api/bug-report" | "/api/db/migrate" | "/api/runtime/fs" | "/api/web-search" | "/reset-password" | "/api/git-clone" | "/api/mcp-check" | "/api/v1/status" | "/preview/:port" | "/api/db/chats" | "/api/db/chats/:id" | "/api/enhancer" | "/api/git-info" | "/api/supabase" | "/api/supabase/variables" | "/api/supabase/query" | "/api/encrypt" | "/api/llmcall" | "/api/v1/chat" | "/api/agents" | "/api/agents/:id" | "/api/auth/*" | "/api/deploy" | "/api/health" | "/api/models" | "/api/models/:provider" | "/api/update" | "/templates" | "/api/chat" | "/chat/:id" | "/agents" | "/signup" | "/admin" | "/login" | "/git" | "/*";
   };
   "routes/api.configured-providers.ts": {
     id: "routes/api.configured-providers";
@@ -272,6 +280,14 @@ type RouteFiles = {
   "routes/api.system.disk-info.ts": {
     id: "routes/api.system.disk-info";
     page: "/api/system/disk-info";
+  };
+  "routes/api.background-chat.ts": {
+    id: "routes/api.background-chat";
+    page: "/api/background-chat" | "/api/background-chat/:id";
+  };
+  "routes/api.background-chat.$id.ts": {
+    id: "routes/api.background-chat.$id";
+    page: "/api/background-chat/:id";
   };
   "routes/api.export-api-keys.ts": {
     id: "routes/api.export-api-keys";
@@ -543,6 +559,8 @@ type RouteModules = {
   "routes/api.mcp-update-config": typeof import("./app/routes/api.mcp-update-config.ts");
   "routes/api.runtime.terminal": typeof import("./app/routes/api.runtime.terminal.ts");
   "routes/api.system.disk-info": typeof import("./app/routes/api.system.disk-info.ts");
+  "routes/api.background-chat": typeof import("./app/routes/api.background-chat.ts");
+  "routes/api.background-chat.$id": typeof import("./app/routes/api.background-chat.$id.ts");
   "routes/api.export-api-keys": typeof import("./app/routes/api.export-api-keys.ts");
   "routes/api.github-branches": typeof import("./app/routes/api.github-branches.ts");
   "routes/api.github-template": typeof import("./app/routes/api.github-template.ts");

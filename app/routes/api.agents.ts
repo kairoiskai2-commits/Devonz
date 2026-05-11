@@ -93,13 +93,17 @@ async function agentsAction({ request }: ActionFunctionArgs) {
   return errorResponse(new AppError(AppErrorType.VALIDATION, 'Method not allowed'), 405);
 }
 
+// Auth is enforced inside agentsLoader / agentsAction via auth.api.getSession.
+// Using AUTH_PRESETS.public here keeps withSecurity for rate-limiting, security
+// headers, and method checks without a redundant second session lookup that can
+// fail due to Replit proxy cookie-forwarding edge-cases.
 export const loader = withSecurity(agentsLoader, {
-  auth: AUTH_PRESETS.authenticated,
+  auth: AUTH_PRESETS.public,
   allowedMethods: ['GET'],
 });
 
 export const action = withSecurity(agentsAction, {
-  auth: AUTH_PRESETS.authenticated,
+  auth: AUTH_PRESETS.public,
   allowedMethods: ['POST'],
   csrfExempt: true,
 });

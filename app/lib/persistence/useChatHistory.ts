@@ -585,7 +585,7 @@ export function useChatHistory() {
         const newId = await createChatFromMessages(db, description, messages, metadata);
 
         if (!options?.skipRedirect) {
-          window.location.href = `/chat/${newId}`;
+          navigate(`/chat/${newId}`);
         }
 
         toast.success('Chat imported successfully');

@@ -29,6 +29,13 @@
       "when": 1747200000000,
       "tag": "0003_add_agents",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1747300000000,
+      "tag": "0004_add_bg_chat_jobs",
+      "breakpoints": true
     }
   ]
 }

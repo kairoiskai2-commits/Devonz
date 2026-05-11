@@ -273,6 +273,13 @@ export class LLMManager {
   }
 
   getDefaultProvider(): BaseProvider {
+    // Prefer Pollinations as the default — it's free and requires no API key.
+    const pollinations = this._providers.get('Pollinations');
+
+    if (pollinations) {
+      return pollinations;
+    }
+
     const firstProvider = this._providers.values().next().value;
 
     if (!firstProvider) {

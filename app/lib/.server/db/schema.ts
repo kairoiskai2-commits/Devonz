@@ -71,6 +71,46 @@ export const verification = sqliteTable(
   (t) => [index('idx_verification_identifier').on(t.identifier)],
 );
 
+/*
+ * ---------------------------------------------------------------------------
+ * bg_chat_jobs — background AI generation jobs
+ * ---------------------------------------------------------------------------
+ * Allows AI responses to complete server-side even when the browser tab
+ * is closed. The client polls GET /api/background-chat/:id until 'done'.
+ */
+export const bgChatJobs = sqliteTable(
+  'bg_chat_jobs',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id'),
+
+    /** Original /api/chat request body — stored as JSON so we can replay it */
+    requestPayload: text('request_payload', { mode: 'json' }).notNull(),
+
+    status: text('status', { enum: ['pending', 'running', 'done', 'error'] })
+      .notNull()
+      .default('pending'),
+
+    /** Complete AI response text once done */
+    result: text('result'),
+
+    /** Error message if status === 'error' */
+    error: text('error'),
+
+    createdAt: text('created_at')
+      .notNull()
+      .default(sql`(datetime('now'))`),
+    updatedAt: text('updated_at')
+      .notNull()
+      .default(sql`(datetime('now'))`),
+  },
+  (table) => [
+    index('idx_bg_chat_jobs_user_id').on(table.userId),
+    index('idx_bg_chat_jobs_status').on(table.status),
+    index('idx_bg_chat_jobs_created_at').on(table.createdAt),
+  ],
+);
+
 /**
  * SQLite schema for Veyra — mirrors the IndexedDB v3 structure
  * so that data can be migrated from client-side IndexedDB to

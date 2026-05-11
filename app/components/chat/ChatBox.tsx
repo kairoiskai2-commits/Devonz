@@ -19,6 +19,7 @@ import { AgentToggle } from './AgentToggle';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { TabType } from '~/components/@settings/core/types';
 import { chatSavedAt } from '~/lib/persistence/chatSavedAtom';
+import { backgroundModeAtom } from '~/lib/stores/backgroundMode';
 
 const SupabaseConnection = lazy(() => import('./SupabaseConnection').then((m) => ({ default: m.SupabaseConnection })));
 const ExpoQrModal = lazy(() => import('~/components/workbench/ExpoQrModal').then((m) => ({ default: m.ExpoQrModal })));
@@ -77,6 +78,36 @@ interface ChatBoxProps {
   setSelectedElement?: ((element: ElementInfo | null) => void) | undefined;
   onWebSearchResult?: (result: string) => void;
 }
+
+const BackgroundModeToggle: React.FC = () => {
+  const isOn = useStore(backgroundModeAtom);
+
+  return (
+    <IconButton
+      title={
+        isOn
+          ? 'Background AI on — AI continues after tab close. Click to disable.'
+          : 'Background AI off — enable to keep AI running after tab close'
+      }
+      className={cn('transition-all', {
+        'bg-veyra-elements-item-backgroundAccent text-veyra-elements-item-contentAccent': isOn,
+        'bg-veyra-elements-item-backgroundDefault text-veyra-elements-item-contentDefault': !isOn,
+      })}
+      onClick={() => {
+        const next = !isOn;
+        backgroundModeAtom.set(next);
+        toast.info(
+          next
+            ? 'Background AI enabled — responses will complete even if you close the tab.'
+            : 'Background AI disabled.',
+          { duration: 3000 },
+        );
+      }}
+    >
+      <div className={cn('text-lg', isOn ? 'i-ph:cloud-check-duotone' : 'i-ph:cloud')} />
+    </IconButton>
+  );
+};
 
 export const ChatBox: React.FC<ChatBoxProps> = (props) => {
   const [isModelSelectorOpen, setIsModelSelectorOpen] = useState(false);
@@ -425,6 +456,7 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
                     onSearchResult={(result) => props.onWebSearchResult?.(result)}
                     disabled={props.isStreaming}
                   />
+                  <BackgroundModeToggle />
                 </Suspense>
               </motion.div>
             )}
