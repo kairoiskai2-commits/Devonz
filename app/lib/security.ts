@@ -8,6 +8,7 @@ import { validateInput } from './api/schemas';
 import { CsrfService } from './csrf';
 import { AUTH_CONFIG, CSP_CONNECT_SRC_ALLOWLIST, RATE_LIMITS } from './security-config';
 import type { AuthConfig } from './security-config';
+import { auth } from '~/lib/.server/auth';
 
 const logger = createScopedLogger('Security');
 
@@ -367,12 +368,32 @@ export function withSecurity(
       ? options.auth!.level === 'authenticated' || options.auth!.level === 'ownerOnly'
       : options.requireAuth === true;
 
-    if (authRequired && !validateAuthToken(request)) {
-      logger.warn('Unauthorized request', requestContext);
+    if (authRequired) {
+      if (useNewAuth) {
+        // New path: verify the better-auth session (cookie-based, set by /api/auth/*)
+        let session: Awaited<ReturnType<typeof auth.api.getSession>> | null = null;
 
-      return applyHeaders(errorResponse(new SecurityError(SecurityErrorType.UNAUTHORIZED, 'Unauthorized')), {
-        'WWW-Authenticate': 'Bearer',
-      });
+        try {
+          session = await auth.api.getSession({ headers: request.headers });
+        } catch (err) {
+          logger.warn('better-auth getSession threw:', err);
+        }
+
+        if (!session?.user) {
+          logger.warn('Unauthorized request (no valid session)', requestContext);
+
+          return applyHeaders(errorResponse(new SecurityError(SecurityErrorType.UNAUTHORIZED, 'Unauthorized')), {
+            'WWW-Authenticate': 'Bearer',
+          });
+        }
+      } else if (!validateAuthToken(request)) {
+        // Legacy path: check DEVONZ_AUTH_TOKEN / veyra-auth cookie
+        logger.warn('Unauthorized request (invalid auth token)', requestContext);
+
+        return applyHeaders(errorResponse(new SecurityError(SecurityErrorType.UNAUTHORIZED, 'Unauthorized')), {
+          'WWW-Authenticate': 'Bearer',
+        });
+      }
     }
 
     // --- Rate limiting ---------------------------------------------------------
