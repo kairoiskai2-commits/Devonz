@@ -424,8 +424,8 @@ importers:
         specifier: ^5.4.21
         version: 5.4.21(@types/node@24.1.0)(lightningcss@1.32.0)(sass-embedded@1.98.0)(sass@1.98.0)
       vite-plugin-optimize-css-modules:
-        specifier: ^1.1.0
-        version: 1.2.0(vite@5.4.21(@types/node@24.1.0)(lightningcss@1.32.0)(sass-embedded@1.98.0)(sass@1.98.0))
+        specifier: ^1.4.0
+        version: 1.4.0(vite@5.4.21(@types/node@24.1.0)(lightningcss@1.32.0)(sass-embedded@1.98.0)(sass@1.98.0))
       vite-tsconfig-paths:
         specifier: ^4.3.2
         version: 4.3.2(typescript@5.9.3)(vite@5.4.21(@types/node@24.1.0)(lightningcss@1.32.0)(sass-embedded@1.98.0)(sass@1.98.0))
@@ -2263,8 +2263,8 @@ packages:
   '@napi-rs/wasm-runtime@1.1.1':
     resolution: {integrity: sha512-p64ah1M1ld8xjWv3qbvFwHiFVWrq1yFvV4f7w+mzaqiR4IlSgkqhcRdHwsGgomwzBH51sRY4NEowLxnaBjcW/A==}
 
-  '@napi-rs/wasm-runtime@1.1.2':
-    resolution: {integrity: sha512-sNXv5oLJ7ob93xkZ1XnxisYhGYXfaG9f65/ZgYuAu3qt7b3NadcOEhLvx28hv31PgX8SZJRYrAIPQilQmFpLVw==}
+  '@napi-rs/wasm-runtime@1.1.4':
+    resolution: {integrity: sha512-3NQNNgA1YSlJb/kMH1ildASP9HW7/7kYnRI2szWJaofaS1hWmbGI4H+d3+22aGzXXN9IJ+n+GiFVcGipJP18ow==}
     peerDependencies:
       '@emnapi/core': ^1.7.1
       '@emnapi/runtime': ^1.7.1
@@ -4051,6 +4051,9 @@ packages:
   '@tybys/wasm-util@0.10.1':
     resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
 
+  '@tybys/wasm-util@0.10.2':
+    resolution: {integrity: sha512-RoBvJ2X0wuKlWFIjrwffGw1IqZHKQqzIchKaadZZfnNpsAYp2mM0h36JtPCjNDAHGgYez/15uMBpfGwchhiMgg==}
+
   '@types/aria-query@5.0.4':
     resolution: {integrity: sha512-rfT93uj5s0PRL7EzccGMs3brplhcrghnDoV26NqKhCAS1hVo+WdNsPvE/yb6ilfr5hi2MEk6d5EWJTKdxg8jVw==}
 
@@ -4262,6 +4265,7 @@ packages:
 
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
+    deprecated: Potential CWE-502 - Update to 1.3.1 or higher
 
   '@unocss/astro@0.61.9':
     resolution: {integrity: sha512-adOXz4itYHxqhvQgJHlEU58EHDTtY2qrcEPVmQVk4qI1W+ezQV6nQMQvti8mS/HbFw3MOJhIY1MlJoZK36/cyw==}
@@ -6447,6 +6451,7 @@ packages:
 
   libsql@0.5.22:
     resolution: {integrity: sha512-NscWthMQt7fpU8lqd7LXMvT9pi+KhhmTHAJWUB/Lj6MWa0MKFv0F2V4C6WKKpjCVZl0VwcDz4nOI3CyaT1DDiA==}
+    cpu: [x64, arm64, wasm32, arm]
     os: [darwin, linux, win32]
 
   lie@3.3.0:
@@ -8387,6 +8392,7 @@ packages:
 
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   valibot@1.2.0:
@@ -8435,10 +8441,10 @@ packages:
     peerDependencies:
       vite: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
 
-  vite-plugin-optimize-css-modules@1.2.0:
-    resolution: {integrity: sha512-5kOEVyif9qSoLAQDmN6nXW2fgz66oLXGlapKwY7u8nPVaVoyabkioQqf90s0gFvssCAY2bwBndx5sK7LF+i2rA==}
+  vite-plugin-optimize-css-modules@1.4.0:
+    resolution: {integrity: sha512-2U300dlcb4rIOlmNXJ9ro3RcCIj9fXz9fCfNZHNoi5Cq/x5cvAP+RHeePd1OaRc4kvzkzYlE0lHCliKZuMvyGA==}
     peerDependencies:
-      vite: ^6.0.0 || ^5.0.0 || ^4.0.0 || ^3.0.0 || ^2.0.0
+      vite: ^8.0.0 || ^7.0.0 || ^6.0.0 || ^5.0.0 || ^4.0.0 || ^3.0.0 || ^2.0.0
 
   vite-tsconfig-paths@4.3.2:
     resolution: {integrity: sha512-0Vd/a6po6Q+86rPlntHye7F31zA2URZMbH8M3saAZ/xR9QoGN/L21bxEGfXdWmFdNkqPpRdxFT7nmNe12e9/uA==}
@@ -10628,11 +10634,11 @@ snapshots:
       '@tybys/wasm-util': 0.10.1
     optional: true
 
-  '@napi-rs/wasm-runtime@1.1.2(@emnapi/core@1.9.0)(@emnapi/runtime@1.9.0)':
+  '@napi-rs/wasm-runtime@1.1.4(@emnapi/core@1.9.0)(@emnapi/runtime@1.9.0)':
     dependencies:
       '@emnapi/core': 1.9.0
       '@emnapi/runtime': 1.9.0
-      '@tybys/wasm-util': 0.10.1
+      '@tybys/wasm-util': 0.10.2
     optional: true
 
   '@neon-rs/load@0.0.4': {}
@@ -11739,7 +11745,7 @@ snapshots:
 
   '@rolldown/binding-wasm32-wasi@1.0.0-beta.53(@emnapi/core@1.9.0)(@emnapi/runtime@1.9.0)':
     dependencies:
-      '@napi-rs/wasm-runtime': 1.1.2(@emnapi/core@1.9.0)(@emnapi/runtime@1.9.0)
+      '@napi-rs/wasm-runtime': 1.1.4(@emnapi/core@1.9.0)(@emnapi/runtime@1.9.0)
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'
@@ -12464,6 +12470,11 @@ snapshots:
       '@types/react-dom': 19.2.3(@types/react@19.2.14)
 
   '@tybys/wasm-util@0.10.1':
+    dependencies:
+      tslib: 2.8.1
+    optional: true
+
+  '@tybys/wasm-util@0.10.2':
     dependencies:
       tslib: 2.8.1
     optional: true
@@ -17704,7 +17715,7 @@ snapshots:
     transitivePeerDependencies:
       - rollup
 
-  vite-plugin-optimize-css-modules@1.2.0(vite@5.4.21(@types/node@24.1.0)(lightningcss@1.32.0)(sass-embedded@1.98.0)(sass@1.98.0)):
+  vite-plugin-optimize-css-modules@1.4.0(vite@5.4.21(@types/node@24.1.0)(lightningcss@1.32.0)(sass-embedded@1.98.0)(sass@1.98.0)):
     dependencies:
       vite: 5.4.21(@types/node@24.1.0)(lightningcss@1.32.0)(sass-embedded@1.98.0)(sass@1.98.0)
 
