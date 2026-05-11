@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '@nanostores/react';
 import Cookies from 'js-cookie';
@@ -29,26 +29,44 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
   const [modelsExpanded, setModelsExpanded] = useState(false);
   const [hasKey, setHasKey] = useState(false);
   const [loadingModels, setLoadingModels] = useState(false);
+  const [modelSearch, setModelSearch] = useState('');
+  const [showFreeOnly, setShowFreeOnly] = useState(false);
 
-  // Subscribe to env key status store (guard against undefined store value)
   const envKeyStatus = useStore(envKeyStatusStore) ?? {};
   const providerEnvStatus = envKeyStatus[provider.name];
   const hasEnvKey = providerEnvStatus?.hasEnvKey ?? false;
 
-  // Subscribe to preferred models store (reactive — syncs with chat model selector)
   const preferredModels = useStore(preferredModelsStore);
   const selectedModel = preferredModels[provider.name] || '';
 
-  // Determine if provider has any key (cookie or env)
   const hasAnyKey = hasKey || hasEnvKey;
 
-  // Load existing API key from cookie
+  const isOpenRouter = provider.name === 'OpenRouter';
+
+  const freeModelCount = useMemo(() => models.filter((m) => m.isFree).length, [models]);
+
+  const filteredModels = useMemo(() => {
+    let list = models;
+
+    if (showFreeOnly) {
+      list = list.filter((m) => m.isFree);
+    }
+
+    if (modelSearch.trim()) {
+      const q = modelSearch.toLowerCase();
+      list = list.filter(
+        (m) => m.name.toLowerCase().includes(q) || (m.label || '').toLowerCase().includes(q),
+      );
+    }
+
+    return list;
+  }, [models, showFreeOnly, modelSearch]);
+
   useEffect(() => {
     const keys = getApiKeysFromCookies();
     const existing = keys[provider.name] || '';
 
     if (existing && isEncryptedValue(existing)) {
-      // Encrypted key present — don't display ciphertext in the input
       setApiKey('');
       setHasKey(true);
     } else {
@@ -57,9 +75,6 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
     }
   }, [provider.name]);
 
-  // No need for cookie-based preferred model loading — handled reactively via preferredModelsStore
-
-  // Auto-fetch models when provider is enabled with a valid key
   useEffect(() => {
     if (provider.settings.enabled && hasAnyKey && models.length === 0 && !loadingModels) {
       fetchModels();
@@ -79,13 +94,12 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
       const data = (await response.json()) as { modelList?: ModelInfo[] };
       const fetchedModels = data.modelList ?? [];
 
-      // Merge static + dynamic models, deduplicate
       const allModels = [...provider.staticModels, ...fetchedModels];
       const uniqueModels = allModels.filter((model, idx, arr) => arr.findIndex((m) => m.name === model.name) === idx);
 
       setModels(uniqueModels);
     } catch {
-      // Silently fail for auto-fetch - user can still use Test button
+      // Silently fail for auto-fetch
     } finally {
       setLoadingModels(false);
     }
@@ -145,7 +159,6 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
       return;
     }
 
-    // Save the key first so the server can read it from the cookie
     if (apiKey.trim()) {
       saveApiKey(apiKey);
     }
@@ -165,12 +178,12 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
       const data = (await response.json()) as { modelList?: ModelInfo[] };
       const fetchedModels = data.modelList ?? [];
 
-      // Merge static + dynamic models, deduplicate
       const allModels = [...provider.staticModels, ...fetchedModels];
       const uniqueModels = allModels.filter((model, idx, arr) => arr.findIndex((m) => m.name === model.name) === idx);
 
       setModels(uniqueModels);
       setTestResult('success');
+      setModelsExpanded(true);
       toast.success(`${provider.name}: ${uniqueModels.length} model(s) available`);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Connection failed';
@@ -195,7 +208,7 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
         'p-4',
       )}
     >
-      {/* Header row: icon, name, key-status dot, toggle */}
+      {/* Header row */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div
@@ -218,7 +231,6 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
             >
               {provider.name}
             </span>
-            {/* Key status dot */}
             <span
               className={cn(
                 'inline-block w-2 h-2 rounded-full flex-shrink-0',
@@ -234,10 +246,8 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
         />
       </div>
 
-      {/* Description */}
       {description && <p className="mt-1.5 ml-9 text-xs text-veyra-elements-textSecondary">{description}</p>}
 
-      {/* Warning: enabled without API key */}
       {provider.settings.enabled && !hasAnyKey && (
         <div className="mt-1.5 ml-9 flex items-center gap-1.5 text-xs text-amber-400">
           <div className="i-ph:warning w-3.5 h-3.5 flex-shrink-0" />
@@ -245,7 +255,6 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
         </div>
       )}
 
-      {/* Server env key indicator */}
       {hasEnvKey && !hasKey && (
         <div className="mt-1.5 ml-9 flex items-center gap-1.5 text-xs text-blue-400">
           <div className="i-ph:server w-3.5 h-3.5 flex-shrink-0" />
@@ -285,7 +294,6 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
             </button>
           </div>
 
-          {/* Test connection button */}
           <button
             type="button"
             onClick={testConnection}
@@ -312,7 +320,6 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
           </button>
         </div>
 
-        {/* Get API key link */}
         {provider.getApiKeyLink && !hasKey && (
           <a
             href={provider.getApiKeyLink}
@@ -325,7 +332,6 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
           </a>
         )}
 
-        {/* Test error message */}
         <AnimatePresence>
           {testResult === 'error' && testError && (
             <motion.p
@@ -339,7 +345,7 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
           )}
         </AnimatePresence>
 
-        {/* Model list (shown after successful test or auto-fetch) */}
+        {/* Model list */}
         <AnimatePresence>
           {models.length > 0 && (
             <motion.div
@@ -348,28 +354,54 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
               exit={{ opacity: 0, height: 0 }}
               className="overflow-hidden"
             >
-              <button
-                type="button"
-                onClick={() => setModelsExpanded((prev) => !prev)}
-                className={cn(
-                  'flex items-center gap-1.5 text-xs bg-transparent border-none p-0 cursor-pointer',
-                  'text-veyra-elements-textSecondary hover:text-veyra-elements-item-contentAccent',
-                  'transition-colors duration-150',
-                )}
-              >
-                <div
+              {/* Header row: count + filters */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => setModelsExpanded((prev) => !prev)}
                   className={cn(
-                    'i-ph:caret-right w-3 h-3 transition-transform duration-200',
-                    modelsExpanded && 'rotate-90',
+                    'flex items-center gap-1.5 text-xs bg-transparent border-none p-0 cursor-pointer',
+                    'text-veyra-elements-textSecondary hover:text-veyra-elements-item-contentAccent',
+                    'transition-colors duration-150',
                   )}
-                />
-                <span className="text-green-500 font-medium">{models.length}</span>
-                <span>model{models.length !== 1 ? 's' : ''} available</span>
-                {selectedModel && (
-                  <span className="ml-1 text-veyra-elements-item-contentAccent">— using {selectedModel}</span>
-                )}
-              </button>
+                >
+                  <div
+                    className={cn(
+                      'i-ph:caret-right w-3 h-3 transition-transform duration-200',
+                      modelsExpanded && 'rotate-90',
+                    )}
+                  />
+                  <span className="text-green-500 font-medium">{models.length}</span>
+                  <span>model{models.length !== 1 ? 's' : ''} available</span>
+                  {selectedModel && (
+                    <span className="ml-1 text-veyra-elements-item-contentAccent">— using {selectedModel}</span>
+                  )}
+                </button>
 
+                {/* Free-only toggle (shown for providers that have free models) */}
+                {isOpenRouter && freeModelCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowFreeOnly((prev) => !prev);
+                      setModelsExpanded(true);
+                    }}
+                    className={cn(
+                      'flex items-center gap-1 px-2 py-0.5 rounded-full text-xs border transition-colors duration-150',
+                      showFreeOnly
+                        ? 'bg-green-500/20 border-green-500/50 text-green-400'
+                        : 'bg-transparent border-veyra-elements-borderColor text-veyra-elements-textTertiary hover:text-green-400 hover:border-green-500/50',
+                    )}
+                    title={showFreeOnly ? 'Show all models' : 'Show free models only'}
+                  >
+                    <div className="i-ph:gift w-3 h-3" />
+                    Free only
+                    {showFreeOnly && <span className="ml-0.5">({freeModelCount})</span>}
+                  </button>
+                )}
+              </div>
+
+              {/* Expanded model list */}
               <AnimatePresence>
                 {modelsExpanded && (
                   <motion.div
@@ -378,38 +410,86 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
                     exit={{ opacity: 0, height: 0 }}
                     className="mt-1.5 overflow-hidden"
                   >
+                    {/* Search input */}
+                    <div className="relative mb-1.5">
+                      <div className="i-ph:magnifying-glass absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-veyra-elements-textTertiary" />
+                      <input
+                        type="text"
+                        placeholder="Search models..."
+                        value={modelSearch}
+                        onChange={(e) => setModelSearch(e.target.value)}
+                        className={cn(
+                          'w-full pl-6 pr-3 py-1.5 rounded-md text-xs',
+                          'bg-veyra-elements-background-depth-1',
+                          'border border-veyra-elements-borderColor',
+                          'text-veyra-elements-textPrimary',
+                          'placeholder-veyra-elements-textTertiary',
+                          'focus:outline-none focus:ring-1 focus:ring-veyra-elements-borderColorActive',
+                        )}
+                      />
+                      {modelSearch && (
+                        <button
+                          type="button"
+                          onClick={() => setModelSearch('')}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 bg-transparent border-none p-0 cursor-pointer text-veyra-elements-textTertiary hover:text-veyra-elements-textPrimary"
+                        >
+                          <div className="i-ph:x w-3 h-3" />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Result count when filtering */}
+                    {(modelSearch || showFreeOnly) && (
+                      <p className="text-xs text-veyra-elements-textTertiary mb-1">
+                        {filteredModels.length} of {models.length} model{models.length !== 1 ? 's' : ''}
+                        {showFreeOnly ? ' (free)' : ''}
+                        {modelSearch ? ` matching "${modelSearch}"` : ''}
+                      </p>
+                    )}
+
                     <div
                       className={cn(
-                        'max-h-[160px] overflow-y-auto rounded-md p-2',
+                        'max-h-[300px] overflow-y-auto rounded-md p-2',
                         'bg-veyra-elements-background-depth-1',
                         'border border-veyra-elements-borderColor',
                       )}
                     >
-                      {models.map((model) => (
-                        <button
-                          type="button"
-                          key={model.name}
-                          onClick={() => savePreferredModel(model.name)}
-                          className={cn(
-                            'w-full flex items-center gap-2 py-1.5 px-2 rounded text-left',
-                            'text-xs cursor-pointer border-none',
-                            'transition-colors duration-100',
-                            selectedModel === model.name
-                              ? 'bg-veyra-elements-item-backgroundAccent text-veyra-elements-item-contentAccent'
-                              : 'bg-transparent text-veyra-elements-textSecondary hover:bg-veyra-elements-background-depth-2',
-                          )}
-                        >
-                          <div
+                      {filteredModels.length === 0 ? (
+                        <p className="text-xs text-veyra-elements-textTertiary text-center py-3">
+                          No models match your search
+                        </p>
+                      ) : (
+                        filteredModels.map((model) => (
+                          <button
+                            type="button"
+                            key={model.name}
+                            onClick={() => savePreferredModel(model.name)}
                             className={cn(
-                              'w-3 h-3 flex-shrink-0',
+                              'w-full flex items-center gap-2 py-1.5 px-2 rounded text-left',
+                              'text-xs cursor-pointer border-none',
+                              'transition-colors duration-100',
                               selectedModel === model.name
-                                ? 'i-ph:check-circle-fill text-veyra-elements-item-contentAccent'
-                                : 'i-ph:circle text-veyra-elements-textTertiary',
+                                ? 'bg-veyra-elements-item-backgroundAccent text-veyra-elements-item-contentAccent'
+                                : 'bg-transparent text-veyra-elements-textSecondary hover:bg-veyra-elements-background-depth-2',
                             )}
-                          />
-                          <span className="truncate">{model.label || model.name}</span>
-                        </button>
-                      ))}
+                          >
+                            <div
+                              className={cn(
+                                'w-3 h-3 flex-shrink-0',
+                                selectedModel === model.name
+                                  ? 'i-ph:check-circle-fill text-veyra-elements-item-contentAccent'
+                                  : 'i-ph:circle text-veyra-elements-textTertiary',
+                              )}
+                            />
+                            {model.isFree && (
+                              <span className="flex-shrink-0 text-green-400 text-[10px] font-medium bg-green-400/10 px-1 rounded">
+                                FREE
+                              </span>
+                            )}
+                            <span className="truncate">{model.label || model.name}</span>
+                          </button>
+                        ))
+                      )}
                     </div>
                   </motion.div>
                 )}
@@ -418,7 +498,6 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
           )}
         </AnimatePresence>
 
-        {/* Loading models indicator */}
         {loadingModels && (
           <div className="flex items-center gap-1.5 text-xs text-veyra-elements-textTertiary">
             <div className="i-ph:spinner-gap w-3 h-3 animate-spin" />

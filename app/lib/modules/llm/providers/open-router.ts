@@ -102,18 +102,25 @@ export default class OpenRouterProvider extends BaseProvider {
           const maxAllowed = 1000000;
           const finalContext = Math.min(contextWindow, maxAllowed);
 
-          const promptCost = (m.pricing.prompt * 1_000_000).toFixed(2);
-          const completionCost = (m.pricing.completion * 1_000_000).toFixed(2);
+          const promptPrice = m.pricing.prompt * 1_000_000;
+          const completionPrice = m.pricing.completion * 1_000_000;
+          const isFree = promptPrice === 0 && completionPrice === 0;
+
+          const promptCost = promptPrice.toFixed(2);
+          const completionCost = completionPrice.toFixed(2);
           const contextLabel =
             finalContext >= 1000000
               ? `${Math.floor(finalContext / 1000000)}M`
               : `${Math.floor(finalContext / 1000)}k`;
 
+          const freeTag = isFree ? ' [FREE]' : '';
+
           return {
             name: m.id,
-            label: `${m.name} - in:$${promptCost} out:$${completionCost} - context ${contextLabel}`,
+            label: `${m.name}${freeTag} - in:$${promptCost} out:$${completionCost} - context ${contextLabel}`,
             provider: this.name,
             maxTokenAllowed: finalContext,
+            isFree,
           };
         });
     } catch (error) {

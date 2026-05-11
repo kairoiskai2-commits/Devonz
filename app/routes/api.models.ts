@@ -106,7 +106,7 @@ async function modelsLoader({ request, params, context }: LoaderFunctionArgs): P
 }
 
 export const loader = withSecurity(modelsLoader, {
-  auth: AUTH_PRESETS.authenticated,
+  auth: AUTH_PRESETS.public,
   allowedMethods: ['GET'],
   rateLimit: false,
 });

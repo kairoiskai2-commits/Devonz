@@ -18,6 +18,9 @@ export interface ModelInfo {
    * due to rate limits, auth errors, or timeouts. Capped at 1 fallback attempt.
    */
   fallbackModel?: string;
+
+  /** Whether this model is free to use (no cost per token) */
+  isFree?: boolean;
 }
 
 export interface ProviderInfo {
