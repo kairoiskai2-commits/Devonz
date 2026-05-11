@@ -45,4 +45,4 @@ build = ["pnpm", "run", "build"]
 OPENAI_LIKE_API_BASE_URL = "https://aiapiv2.pekpik.com/v1"
 OPENAI_LIKE_API_MODELS = "claude-opus-4-7:200000;gemini-2.5-flash:1000000;smart-chat:200000;gpt-5.5:200000"
 BETTER_AUTH_SECRET = "9c592c9fa21eaeda3c48d06a6709f566179164104190c937d6613e0136c4f154"
-BETTER_AUTH_URL = "https://devonz--tinottmina.replit.app"
+BETTER_AUTH_URL = "https://54d9161f-a4da-46d6-ab49-4b964aa36cc5-00-3exk7027jzfwn.janeway.replit.dev"

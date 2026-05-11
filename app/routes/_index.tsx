@@ -4,12 +4,16 @@ import { BaseChat } from '~/components/chat/BaseChat';
 import { ComponentErrorBoundary } from '~/components/ui/ComponentErrorBoundary';
 import { Header } from '~/components/header/Header';
 import { clientLazy } from '~/utils/react';
+import { authClient } from '~/lib/auth-client';
 
 const Chat = clientLazy(() => import('~/components/chat/Chat.client').then((m) => ({ default: m.Chat })));
 const MigrationBanner = clientLazy(() =>
   import('~/components/chat/MigrationBanner.client').then((m) => ({ default: m.MigrationBanner })),
 );
 const UpdateBanner = lazy(() => import('~/components/ui/UpdateBanner').then((m) => ({ default: m.UpdateBanner })));
+const LandingPage = clientLazy(() =>
+  import('~/components/landing/LandingPage.client').then((m) => ({ default: m.LandingPage })),
+);
 
 export const meta: MetaFunction = () => {
   return [
@@ -82,30 +86,44 @@ export function ErrorBoundary() {
   );
 }
 
-/**
- * Landing page component for Veyra
- * Note: Settings functionality should ONLY be accessed through the sidebar menu.
- * Do not add settings button/panel to this landing page as it was intentionally removed
- * to keep the UI clean and consistent with the design system.
- */
-export default function Index() {
-  return (
-    <main
-      id="main-content"
-      className="flex flex-col h-full w-full overflow-hidden bg-veyra-elements-background-depth-1"
-    >
-      <Suspense fallback={null}>
-        <MigrationBanner />
-      </Suspense>
-      <Suspense fallback={null}>
-        <UpdateBanner />
-      </Suspense>
-      <Header />
-      <ComponentErrorBoundary name="Chat">
-        <Suspense fallback={<BaseChat />}>
-          <Chat />
+function AppShell() {
+  const { data: session, isPending } = authClient.useSession();
+
+  // While checking auth, show landing page immediately (avoids blank spinner screen).
+  // Once isPending resolves and the user IS logged in, swap to the app.
+  if (session?.user && !isPending) {
+    return (
+      <main
+        id="main-content"
+        className="flex flex-col h-full w-full overflow-hidden bg-veyra-elements-background-depth-1"
+      >
+        <Suspense fallback={null}>
+          <MigrationBanner />
         </Suspense>
-      </ComponentErrorBoundary>
-    </main>
+        <Suspense fallback={null}>
+          <UpdateBanner />
+        </Suspense>
+        <Header />
+        <ComponentErrorBoundary name="Chat">
+          <Suspense fallback={<BaseChat />}>
+            <Chat />
+          </Suspense>
+        </ComponentErrorBoundary>
+      </main>
+    );
+  }
+
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center h-full w-full bg-veyra-elements-background-depth-1">
+        <div className="w-8 h-8 rounded-full border-2 border-accent-500/30 border-t-accent-500 animate-spin" />
+      </div>
+    }>
+      <LandingPage />
+    </Suspense>
   );
+}
+
+export default function Index() {
+  return <AppShell />;
 }

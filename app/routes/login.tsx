@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 import type { MetaFunction } from 'react-router';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
 import { authClient } from '~/lib/auth-client';
 
 export const meta: MetaFunction = () => [
@@ -16,7 +17,9 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [oauthLoading, setOauthLoading] = useState<'github' | 'google' | null>(null);
   const [providers, setProviders] = useState({ github: false, google: false });
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (!isPending && session?.user) {
@@ -58,72 +61,142 @@ export default function LoginPage() {
   };
 
   const handleOAuth = async (provider: 'github' | 'google') => {
+    setOauthLoading(provider);
     try {
       await authClient.signIn.social({ provider, callbackURL: '/' });
     } catch {
       toast.error(`Failed to sign in with ${provider}`);
+      setOauthLoading(null);
     }
   };
 
   return (
-    <div className="min-h-screen bg-veyra-elements-background-depth-1 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Logo */}
-        <div className="flex flex-col items-center mb-8">
-          <div className="w-12 h-12 rounded-xl bg-accent-500/10 border border-accent-500/30 flex items-center justify-center mb-4">
-            <svg width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <div className="min-h-screen flex bg-veyra-elements-background-depth-1 overflow-hidden">
+      {/* Left decorative panel */}
+      <div className="hidden lg:flex flex-1 relative flex-col items-center justify-center p-12 overflow-hidden">
+        {/* Animated gradient background */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.12) 0%, rgba(168,85,247,0.08) 50%, rgba(236,72,153,0.05) 100%)' }} />
+          <motion.div
+            className="absolute top-0 left-0 w-96 h-96 rounded-full blur-3xl"
+            style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)' }}
+            animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 8, repeat: Infinity }}
+          />
+          <motion.div
+            className="absolute bottom-0 right-0 w-80 h-80 rounded-full blur-3xl"
+            style={{ background: 'radial-gradient(circle, rgba(236,72,153,0.12) 0%, transparent 70%)' }}
+            animate={{ scale: [1.2, 1, 1.2], opacity: [0.4, 0.8, 0.4] }}
+            transition={{ duration: 10, repeat: Infinity, delay: 3 }}
+          />
+          <div className="absolute inset-0 opacity-[0.04]"
+            style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+        </div>
+
+        <div className="relative text-center max-w-sm">
+          <div className="w-16 h-16 rounded-2xl mx-auto mb-8 flex items-center justify-center shadow-2xl shadow-accent-500/30"
+            style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}>
+            <svg width="28" height="28" viewBox="0 0 20 20" fill="none">
               <path d="M3 4L10 16L17 4" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
               <path d="M6.5 4L10 10.5L13.5 4" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
-          <h1 className="text-2xl font-semibold text-veyra-elements-textPrimary">Welcome back</h1>
-          <p className="text-sm text-veyra-elements-textSecondary mt-1">Sign in to your Veyra account</p>
+          <h2 className="text-2xl font-black mb-4 text-veyra-elements-textPrimary">Build with AI.</h2>
+          <p className="text-sm text-veyra-elements-textSecondary leading-relaxed">
+            Describe your idea and Veyra generates production-ready full-stack code in seconds.
+          </p>
+
+          <div className="mt-10 space-y-3 text-left">
+            {[
+              { icon: 'i-ph:lightning-fill', color: 'text-yellow-400', text: 'Build apps 10x faster with AI' },
+              { icon: 'i-ph:brain-fill', color: 'text-purple-400', text: '31+ AI models supported' },
+              { icon: 'i-ph:rocket-launch-fill', color: 'text-green-400', text: 'One-click deploy to any platform' },
+            ].map((item) => (
+              <div key={item.text} className="flex items-center gap-3 px-4 py-3 rounded-xl border border-veyra-elements-borderColor bg-veyra-elements-background-depth-2/50 backdrop-blur-sm">
+                <div className={`${item.icon} ${item.color} text-lg flex-shrink-0`} />
+                <span className="text-sm text-veyra-elements-textSecondary">{item.text}</span>
+              </div>
+            ))}
+          </div>
         </div>
+      </div>
 
-        {/* Card */}
-        <div className="bg-veyra-elements-background-depth-2 border border-veyra-elements-borderColor rounded-xl p-6 shadow-lg">
+      {/* Right form panel */}
+      <div className="flex flex-1 items-center justify-center p-6 lg:p-12">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-full max-w-md"
+        >
+          {/* Logo (mobile) */}
+          <div className="flex lg:hidden items-center gap-2 mb-8">
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}>
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                <path d="M3 4L10 16L17 4" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <span className="text-base font-bold">Veyra</span>
+          </div>
+
+          <h1 className="text-2xl font-black text-veyra-elements-textPrimary mb-1">Welcome back</h1>
+          <p className="text-sm text-veyra-elements-textSecondary mb-8">Sign in to your account to continue building</p>
+
           {/* OAuth buttons */}
-          {(providers.github || providers.google) && (
-            <div className="space-y-2 mb-6">
-              {providers.github && (
-                <button
-                  onClick={() => handleOAuth('github')}
-                  className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-lg bg-veyra-elements-background-depth-3 border border-veyra-elements-borderColor text-sm text-veyra-elements-textPrimary hover:bg-veyra-elements-background-depth-4 hover:border-accent-500/40 transition-all"
-                >
-                  <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
-                  </svg>
-                  Continue with GitHub
-                </button>
-              )}
+          <div className="space-y-2.5 mb-6">
+            {providers.google && (
+              <motion.button
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                onClick={() => handleOAuth('google')}
+                disabled={!!oauthLoading}
+                className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-white text-gray-800 text-sm font-semibold hover:bg-gray-50 transition-all shadow-sm disabled:opacity-70"
+              >
+                {oauthLoading === 'google'
+                  ? <span className="i-svg-spinners:ring-resize w-4 h-4 shrink-0 text-gray-600" />
+                  : <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
+                }
+                Continue with Google
+              </motion.button>
+            )}
 
-              {providers.google && (
-                <button
-                  onClick={() => handleOAuth('google')}
-                  className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-lg bg-veyra-elements-background-depth-3 border border-veyra-elements-borderColor text-sm text-veyra-elements-textPrimary hover:bg-veyra-elements-background-depth-4 hover:border-accent-500/40 transition-all"
-                >
-                  <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                  </svg>
-                  Continue with Google
-                </button>
-              )}
+            {providers.github && (
+              <motion.button
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                onClick={() => handleOAuth('github')}
+                disabled={!!oauthLoading}
+                className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-[#24292e] text-white text-sm font-semibold hover:bg-[#2f363d] transition-all disabled:opacity-70"
+              >
+                {oauthLoading === 'github'
+                  ? <span className="i-svg-spinners:ring-resize w-4 h-4 shrink-0" />
+                  : <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                }
+                Continue with GitHub
+              </motion.button>
+            )}
 
+            {(providers.github || providers.google) && (
               <div className="relative flex items-center gap-3 py-1">
                 <div className="flex-1 h-px bg-veyra-elements-borderColor" />
-                <span className="text-xs text-veyra-elements-textTertiary">or</span>
+                <span className="text-xs text-veyra-elements-textTertiary font-medium">or continue with email</span>
                 <div className="flex-1 h-px bg-veyra-elements-borderColor" />
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
-          {/* Email / password form */}
+          {/* Email/password form */}
           <form onSubmit={handleEmailSignIn} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-veyra-elements-textSecondary mb-1.5">
+              <label className="block text-xs font-semibold text-veyra-elements-textSecondary mb-1.5">
                 Email address
               </label>
               <input
@@ -133,45 +206,54 @@ export default function LoginPage() {
                 placeholder="you@example.com"
                 required
                 autoComplete="email"
-                className="w-full px-3 py-2 rounded-lg bg-veyra-elements-background-depth-3 border border-veyra-elements-borderColor text-sm text-veyra-elements-textPrimary placeholder:text-veyra-elements-textTertiary focus:outline-none focus:border-accent-500/60 focus:ring-1 focus:ring-accent-500/30 transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-veyra-elements-background-depth-2 border border-veyra-elements-borderColor text-sm text-veyra-elements-textPrimary placeholder:text-veyra-elements-textTertiary focus:outline-none focus:border-accent-500/60 focus:ring-2 focus:ring-accent-500/15 transition-all"
               />
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-medium text-veyra-elements-textSecondary">
-                  Password
-                </label>
+                <label className="block text-xs font-semibold text-veyra-elements-textSecondary">Password</label>
               </div>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-                autoComplete="current-password"
-                className="w-full px-3 py-2 rounded-lg bg-veyra-elements-background-depth-3 border border-veyra-elements-borderColor text-sm text-veyra-elements-textPrimary placeholder:text-veyra-elements-textTertiary focus:outline-none focus:border-accent-500/60 focus:ring-1 focus:ring-accent-500/30 transition-all"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  autoComplete="current-password"
+                  className="w-full px-3.5 py-2.5 pr-10 rounded-xl bg-veyra-elements-background-depth-2 border border-veyra-elements-borderColor text-sm text-veyra-elements-textPrimary placeholder:text-veyra-elements-textTertiary focus:outline-none focus:border-accent-500/60 focus:ring-2 focus:ring-accent-500/15 transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-veyra-elements-textTertiary hover:text-veyra-elements-textSecondary transition-colors"
+                >
+                  <div className={showPassword ? 'i-ph:eye-slash' : 'i-ph:eye'} />
+                </button>
+              </div>
             </div>
 
-            <button
+            <motion.button
               type="submit"
               disabled={isLoading}
-              className="w-full px-4 py-2.5 rounded-lg bg-accent-500 hover:bg-accent-600 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-medium transition-all flex items-center justify-center gap-2"
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              className="w-full px-4 py-3 rounded-xl font-bold text-white text-sm transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-accent-500/20"
+              style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}
             >
               {isLoading && <span className="i-svg-spinners:ring-resize w-4 h-4 shrink-0" />}
               {isLoading ? 'Signing in…' : 'Sign in'}
-            </button>
+            </motion.button>
           </form>
-        </div>
 
-        {/* Footer */}
-        <p className="text-center text-sm text-veyra-elements-textSecondary mt-4">
-          Don't have an account?{' '}
-          <Link to="/signup" className="text-accent-400 hover:text-accent-300 font-medium transition-colors">
-            Sign up
-          </Link>
-        </p>
+          <p className="text-center text-sm text-veyra-elements-textSecondary mt-6">
+            Don't have an account?{' '}
+            <Link to="/signup" className="text-accent-400 hover:text-accent-300 font-semibold transition-colors">
+              Sign up for free
+            </Link>
+          </p>
+        </motion.div>
       </div>
     </div>
   );

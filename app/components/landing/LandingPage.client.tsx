@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { authClient } from '~/lib/auth-client';
 
 const FEATURES = [
   {
     icon: 'i-ph:lightning-fill',
     color: 'text-yellow-400',
     bg: 'bg-yellow-500/10 border-yellow-500/20',
+    glow: 'rgba(234,179,8,0.15)',
     title: 'Build in seconds',
     desc: 'Describe your app in plain English and watch Veyra write, run, and deploy the code automatically.',
   },
@@ -15,6 +15,7 @@ const FEATURES = [
     icon: 'i-ph:brain-fill',
     color: 'text-purple-400',
     bg: 'bg-purple-500/10 border-purple-500/20',
+    glow: 'rgba(168,85,247,0.15)',
     title: 'AI-powered stack',
     desc: 'Powered by the latest frontier models — GPT-4o, Claude 3.5, Gemini and more — always picking the best tool.',
   },
@@ -22,6 +23,7 @@ const FEATURES = [
     icon: 'i-ph:code-fill',
     color: 'text-blue-400',
     bg: 'bg-blue-500/10 border-blue-500/20',
+    glow: 'rgba(59,130,246,0.15)',
     title: 'Full-stack apps',
     desc: 'From React frontends to Node backends and databases — Veyra handles the entire application lifecycle.',
   },
@@ -29,13 +31,15 @@ const FEATURES = [
     icon: 'i-ph:rocket-launch-fill',
     color: 'text-green-400',
     bg: 'bg-green-500/10 border-green-500/20',
+    glow: 'rgba(34,197,94,0.15)',
     title: 'One-click deploy',
-    desc: 'Push to Vercel, Netlify or any platform instantly. Your app goes live the moment it\'s ready.',
+    desc: "Push to Vercel, Netlify or any platform instantly. Your app goes live the moment it's ready.",
   },
   {
     icon: 'i-ph:git-branch-fill',
     color: 'text-amber-400',
     bg: 'bg-amber-500/10 border-amber-500/20',
+    glow: 'rgba(245,158,11,0.15)',
     title: 'Import from GitHub',
     desc: 'Drop in a repo URL and continue where you left off — Veyra picks up any existing codebase.',
   },
@@ -43,24 +47,25 @@ const FEATURES = [
     icon: 'i-ph:shield-check-fill',
     color: 'text-teal-400',
     bg: 'bg-teal-500/10 border-teal-500/20',
+    glow: 'rgba(20,184,166,0.15)',
     title: 'Version control',
     desc: 'Every change is tracked. Roll back to any point in history with a single click.',
   },
 ];
 
 const TEMPLATES = [
-  { name: 'SaaS Dashboard', tags: ['React', 'Charts', 'Auth'], emoji: '📊', gradient: 'from-blue-500/20 to-purple-500/20' },
-  { name: 'E-Commerce Store', tags: ['Next.js', 'Stripe', 'DB'], emoji: '🛒', gradient: 'from-green-500/20 to-teal-500/20' },
-  { name: 'Landing Page', tags: ['React', 'Animations', 'CMS'], emoji: '🎨', gradient: 'from-pink-500/20 to-rose-500/20' },
-  { name: 'Blog Platform', tags: ['MDX', 'SEO', 'Auth'], emoji: '✍️', gradient: 'from-amber-500/20 to-orange-500/20' },
-  { name: 'Chat App', tags: ['WebSockets', 'React', 'Node'], emoji: '💬', gradient: 'from-cyan-500/20 to-blue-500/20' },
-  { name: 'REST API', tags: ['Node', 'Express', 'PostgreSQL'], emoji: '⚡', gradient: 'from-violet-500/20 to-purple-500/20' },
+  { name: 'SaaS Dashboard', tags: ['React', 'Charts', 'Auth'], emoji: '📊', gradient: 'from-blue-500/20 to-purple-500/20', border: 'hover:border-blue-500/40' },
+  { name: 'E-Commerce Store', tags: ['Next.js', 'Stripe', 'DB'], emoji: '🛒', gradient: 'from-green-500/20 to-teal-500/20', border: 'hover:border-green-500/40' },
+  { name: 'Landing Page', tags: ['React', 'Animations', 'CMS'], emoji: '🎨', gradient: 'from-pink-500/20 to-rose-500/20', border: 'hover:border-pink-500/40' },
+  { name: 'Blog Platform', tags: ['MDX', 'SEO', 'Auth'], emoji: '✍️', gradient: 'from-amber-500/20 to-orange-500/20', border: 'hover:border-amber-500/40' },
+  { name: 'Chat App', tags: ['WebSockets', 'React', 'Node'], emoji: '💬', gradient: 'from-cyan-500/20 to-blue-500/20', border: 'hover:border-cyan-500/40' },
+  { name: 'REST API', tags: ['Node', 'Express', 'PostgreSQL'], emoji: '⚡', gradient: 'from-violet-500/20 to-purple-500/20', border: 'hover:border-violet-500/40' },
 ];
 
 const STEPS = [
-  { num: '01', title: 'Describe your idea', desc: 'Tell Veyra what you want to build in plain language — no technical knowledge required.' },
-  { num: '02', title: 'AI writes the code', desc: 'Watch as Veyra generates a complete, production-ready codebase in real time.' },
-  { num: '03', title: 'Iterate & deploy', desc: 'Chat with Veyra to refine your app, then deploy to the web with a single click.' },
+  { num: '01', title: 'Describe your idea', desc: 'Tell Veyra what you want to build in plain language — no technical knowledge required.', icon: 'i-ph:chat-circle-text-fill', color: 'from-violet-500 to-purple-600' },
+  { num: '02', title: 'AI writes the code', desc: 'Watch as Veyra generates a complete, production-ready codebase in real time.', icon: 'i-ph:code-fill', color: 'from-blue-500 to-cyan-600' },
+  { num: '03', title: 'Iterate & deploy', desc: 'Chat with Veyra to refine your app, then deploy to the web with a single click.', icon: 'i-ph:rocket-launch-fill', color: 'from-green-500 to-teal-600' },
 ];
 
 const TYPING_DEMOS = [
@@ -68,6 +73,15 @@ const TYPING_DEMOS = [
   'Create a REST API for a todo app with PostgreSQL',
   'Make a landing page with animations and a contact form',
   'Build an e-commerce store with Stripe payments',
+  'Create a real-time chat app with WebSockets',
+];
+
+const MODELS = ['GPT-4o', 'Claude 3.5', 'Gemini 2.0', 'Llama 3', 'Mistral', 'Deepseek', 'Qwen 2.5'];
+
+const TESTIMONIALS = [
+  { name: 'Alex Chen', role: 'Indie Hacker', avatar: 'AC', color: 'from-blue-500 to-cyan-500', text: 'I shipped my SaaS MVP in a weekend. Veyra handled everything from auth to payments.' },
+  { name: 'Sarah K.', role: 'Product Designer', avatar: 'SK', color: 'from-pink-500 to-rose-500', text: 'I can now prototype full-stack apps without needing a developer. Game changer.' },
+  { name: 'Marcus T.', role: 'Startup Founder', avatar: 'MT', color: 'from-violet-500 to-purple-500', text: 'Went from idea to deployed product in 4 hours. The AI just gets what you want.' },
 ];
 
 function TypingDemo() {
@@ -83,13 +97,13 @@ function TypingDemo() {
       if (displayed.length < text.length) {
         timeout = setTimeout(() => setDisplayed(text.slice(0, displayed.length + 1)), 35);
       } else {
-        timeout = setTimeout(() => setPhase('pause'), 2000);
+        timeout = setTimeout(() => setPhase('pause'), 2200);
       }
     } else if (phase === 'pause') {
       timeout = setTimeout(() => setPhase('erasing'), 500);
     } else {
       if (displayed.length > 0) {
-        timeout = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 18);
+        timeout = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 16);
       } else {
         setDemoIndex((i) => (i + 1) % TYPING_DEMOS.length);
         setPhase('typing');
@@ -107,64 +121,149 @@ function TypingDemo() {
   );
 }
 
+function AnimatedGradientOrb({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return <div className={className} style={style} />;
+}
+
+function MarqueeRow({ items, reverse }: { items: string[]; reverse?: boolean }) {
+  const doubled = [...items, ...items];
+  return (
+    <div className="overflow-hidden w-full">
+      <motion.div
+        className="flex gap-3 w-max"
+        animate={{ x: reverse ? ['0%', '-50%'] : ['-50%', '0%'] }}
+        transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+      >
+        {doubled.map((item, i) => (
+          <span
+            key={i}
+            className="flex items-center gap-2 px-4 py-2 rounded-full border border-veyra-elements-borderColor bg-veyra-elements-background-depth-2 text-sm text-veyra-elements-textSecondary font-medium whitespace-nowrap"
+          >
+            <span className="i-ph:brain text-accent-400/60 text-base" />
+            {item}
+          </span>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
 export function LandingPage() {
   const navigate = useNavigate();
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
-  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
-  const heroY = useTransform(scrollY, [0, 400], [0, -60]);
+  const heroOpacity = useTransform(scrollY, [0, 350], [1, 0]);
+  const heroY = useTransform(scrollY, [0, 350], [0, -50]);
 
   const handleGetStarted = () => navigate('/signup');
 
   return (
     <div className="relative min-h-screen bg-veyra-elements-background-depth-1 text-veyra-elements-textPrimary overflow-x-hidden">
 
-      {/* ── Ambient background blobs ── */}
+      {/* ── Animated background layer ── */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-accent-500/8 blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
-        <div className="absolute top-1/3 -right-40 w-[500px] h-[500px] rounded-full bg-blue-500/6 blur-[100px] animate-pulse" style={{ animationDuration: '12s', animationDelay: '2s' }} />
-        <div className="absolute bottom-0 left-1/3 w-[400px] h-[400px] rounded-full bg-purple-500/6 blur-[80px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '4s' }} />
-
-        {/* dot grid */}
-        <div
-          className="absolute inset-0 opacity-[0.035]"
-          style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '32px 32px' }}
+        {/* Large slow orbs */}
+        <motion.div
+          className="absolute -top-64 -left-64 w-[900px] h-[900px] rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%)' }}
+          animate={{ scale: [1, 1.1, 1], opacity: [0.6, 1, 0.6] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
         />
+        <motion.div
+          className="absolute top-1/3 -right-64 w-[700px] h-[700px] rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(168,85,247,0.06) 0%, transparent 70%)' }}
+          animate={{ scale: [1.1, 1, 1.1], opacity: [0.5, 0.9, 0.5] }}
+          transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+        />
+        <motion.div
+          className="absolute bottom-0 left-1/3 w-[600px] h-[600px] rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(236,72,153,0.05) 0%, transparent 70%)' }}
+          animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.8, 0.4] }}
+          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 5 }}
+        />
+        {/* Dot grid */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '28px 28px' }}
+        />
+        {/* Horizontal gradient lines */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-500/20 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/20 to-transparent" />
       </div>
+
+      {/* ── NAVBAR ── */}
+      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 backdrop-blur-xl border-b border-white/5"
+        style={{ background: 'rgba(9,9,11,0.7)' }}>
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl flex items-center justify-center shadow-lg shadow-accent-500/20"
+            style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+              <path d="M3 4L10 16L17 4" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M6.5 4L10 10.5L13.5 4" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <span className="text-base font-bold tracking-tight">Veyra</span>
+        </div>
+
+        <div className="hidden md:flex items-center gap-6 text-sm text-veyra-elements-textSecondary">
+          <a href="#features" className="hover:text-veyra-elements-textPrimary transition-colors">Features</a>
+          <a href="#how-it-works" className="hover:text-veyra-elements-textPrimary transition-colors">How it works</a>
+          <a href="#templates" className="hover:text-veyra-elements-textPrimary transition-colors">Templates</a>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Link
+            to="/login"
+            className="px-4 py-1.5 text-sm text-veyra-elements-textSecondary hover:text-veyra-elements-textPrimary border border-veyra-elements-borderColor hover:border-veyra-elements-borderColorActive rounded-lg transition-all"
+          >
+            Sign in
+          </Link>
+          <button
+            onClick={handleGetStarted}
+            className="px-4 py-1.5 text-sm font-semibold text-white rounded-lg transition-all hover:opacity-90 hover:scale-[1.02] active:scale-95"
+            style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}
+          >
+            Get started
+          </button>
+        </div>
+      </nav>
 
       {/* ── HERO ── */}
       <motion.section
         ref={heroRef}
         style={{ opacity: heroOpacity, y: heroY }}
-        className="relative pt-28 pb-20 px-6 flex flex-col items-center text-center"
+        className="relative pt-36 pb-24 px-6 flex flex-col items-center text-center"
       >
-        {/* Badge */}
+        {/* Floating badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent-500/30 bg-accent-500/10 text-accent-300 text-xs font-medium mb-6"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent-500/30 bg-accent-500/10 text-accent-300 text-xs font-semibold mb-8 shadow-lg shadow-accent-500/10"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-accent-400 animate-pulse" />
-          AI-powered full-stack development
+          AI-powered full-stack development platform
+          <span className="w-1.5 h-1.5 rounded-full bg-accent-400 animate-pulse" />
         </motion.div>
 
-        {/* Headline */}
+        {/* Giant headline with animated gradient */}
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-5xl md:text-7xl font-bold tracking-tight max-w-4xl leading-[1.1] mb-6"
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight max-w-5xl leading-[1.05] mb-6"
         >
-          Build apps with{' '}
+          Build full-stack apps{' '}
+          <br />
           <span
             className="text-transparent bg-clip-text"
-            style={{ backgroundImage: 'linear-gradient(135deg, #6366f1 0%, #a855f7 40%, #ec4899 100%)' }}
+            style={{
+              backgroundImage: 'linear-gradient(135deg, #818cf8 0%, #a855f7 35%, #ec4899 65%, #f43f5e 100%)',
+              backgroundSize: '200% 200%',
+            }}
           >
-            AI
+            with AI magic
           </span>
-          ,{' '}
-          <span className="text-veyra-elements-textSecondary">instantly</span>
         </motion.h1>
 
         <motion.p
@@ -173,7 +272,7 @@ export function LandingPage() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-lg md:text-xl text-veyra-elements-textSecondary max-w-2xl mb-10 leading-relaxed"
         >
-          Veyra turns your ideas into production-ready apps. Just describe what you want — AI handles the code, deployment, and everything in between.
+          Veyra turns your ideas into production-ready apps in minutes. Describe what you want — AI handles the code, deployment, and everything in between.
         </motion.p>
 
         {/* CTAs */}
@@ -183,114 +282,162 @@ export function LandingPage() {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="flex flex-col sm:flex-row items-center gap-3 mb-16"
         >
-          <button
+          <motion.button
             onClick={handleGetStarted}
-            className="group px-6 py-3 rounded-xl font-semibold text-sm text-white flex items-center gap-2 transition-all hover:scale-105 active:scale-95"
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
+            className="group relative px-8 py-3.5 rounded-xl font-bold text-sm text-white flex items-center gap-2 overflow-hidden shadow-xl shadow-accent-500/25"
             style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}
           >
-            Start building for free
-            <div className="i-ph:arrow-right group-hover:translate-x-0.5 transition-transform" />
-          </button>
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+              style={{ background: 'linear-gradient(135deg, #818cf8, #c084fc)' }} />
+            <span className="relative i-ph:sparkle-fill" />
+            <span className="relative">Start building for free</span>
+            <span className="relative i-ph:arrow-right group-hover:translate-x-0.5 transition-transform" />
+          </motion.button>
+
           <Link
             to="/login"
-            className="px-6 py-3 rounded-xl text-sm font-medium border border-veyra-elements-borderColor text-veyra-elements-textSecondary hover:text-veyra-elements-textPrimary hover:border-veyra-elements-borderColorActive bg-veyra-elements-background-depth-2 transition-all"
+            className="px-8 py-3.5 rounded-xl text-sm font-medium border border-veyra-elements-borderColor text-veyra-elements-textSecondary hover:text-veyra-elements-textPrimary hover:border-accent-500/40 bg-veyra-elements-background-depth-2/80 backdrop-blur-sm transition-all"
           >
-            Sign in
+            Already have an account? Sign in
           </Link>
         </motion.div>
 
         {/* Demo prompt box */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.4 }}
+          transition={{ duration: 0.8, delay: 0.45 }}
           className="w-full max-w-2xl"
         >
-          <div className="relative rounded-2xl border border-veyra-elements-borderColor bg-veyra-elements-background-depth-2 shadow-2xl overflow-hidden">
-            <div className="flex items-center gap-1.5 px-4 py-3 border-b border-veyra-elements-borderColor bg-veyra-elements-background-depth-3">
-              <div className="w-2.5 h-2.5 rounded-full bg-red-400/70" />
-              <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/70" />
-              <div className="w-2.5 h-2.5 rounded-full bg-green-400/70" />
-              <span className="ml-2 text-xs text-veyra-elements-textTertiary">Veyra AI App Builder</span>
+          <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/60"
+            style={{ border: '1px solid rgba(99,102,241,0.25)' }}>
+            {/* Glow border effect */}
+            <div className="absolute inset-0 rounded-2xl pointer-events-none"
+              style={{ boxShadow: 'inset 0 0 40px rgba(99,102,241,0.05)' }} />
+
+            {/* Window chrome */}
+            <div className="flex items-center gap-1.5 px-4 py-3 border-b border-veyra-elements-borderColor bg-veyra-elements-background-depth-3/80 backdrop-blur-sm">
+              <div className="w-3 h-3 rounded-full bg-red-400/80" />
+              <div className="w-3 h-3 rounded-full bg-yellow-400/80" />
+              <div className="w-3 h-3 rounded-full bg-green-400/80" />
+              <span className="ml-2 text-xs text-veyra-elements-textTertiary font-medium">Veyra — AI App Builder</span>
             </div>
-            <div className="flex items-center gap-3 px-5 py-5">
-              <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center"
-                style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}>
-                <div className="i-ph:sparkle-fill text-white text-sm" />
+
+            <div className="bg-veyra-elements-background-depth-2/90 backdrop-blur-sm p-5">
+              <div className="flex items-start gap-3 mb-5">
+                <div className="w-9 h-9 rounded-xl flex-shrink-0 flex items-center justify-center shadow-lg"
+                  style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}>
+                  <div className="i-ph:sparkle-fill text-white text-sm" />
+                </div>
+                <div className="flex-1 pt-1">
+                  <p className="text-sm text-left min-h-[20px]">
+                    <TypingDemo />
+                  </p>
+                </div>
               </div>
-              <p className="text-sm text-left min-h-[20px]">
-                <TypingDemo />
-              </p>
-            </div>
-            <div className="px-5 pb-5">
-              <div className="space-y-2">
-                {['Analyzing your request...', 'Generating project structure...', 'Writing React components...'].map((step, i) => (
-                  <div key={step} className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
-                      <div className="i-ph:check text-green-400 text-xs" />
+
+              <div className="space-y-2.5">
+                {[
+                  { label: 'Analyzing your request...', pct: '100%', done: true },
+                  { label: 'Generating project structure...', pct: '78%', done: true },
+                  { label: 'Writing React components...', pct: '45%', done: false },
+                ].map((step, i) => (
+                  <div key={step.label} className="flex items-center gap-3">
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${step.done ? 'bg-green-500/20' : 'bg-accent-500/20'}`}>
+                      {step.done
+                        ? <div className="i-ph:check text-green-400 text-xs" />
+                        : <div className="i-svg-spinners:ring-resize text-accent-400 text-xs" />
+                      }
                     </div>
-                    <div className="flex-1 h-1.5 rounded-full bg-veyra-elements-background-depth-3 overflow-hidden">
-                      <div
+                    <div className="flex-1 h-1.5 rounded-full bg-veyra-elements-background-depth-3/80 overflow-hidden">
+                      <motion.div
                         className="h-full rounded-full"
-                        style={{
-                          width: i === 0 ? '100%' : i === 1 ? '75%' : '40%',
-                          background: 'linear-gradient(90deg, #6366f1, #a855f7)',
-                        }}
+                        initial={{ width: 0 }}
+                        animate={{ width: step.pct }}
+                        transition={{ duration: 1.5, delay: 0.8 + i * 0.3, ease: 'easeOut' }}
+                        style={{ background: step.done ? 'linear-gradient(90deg, #22c55e, #10b981)' : 'linear-gradient(90deg, #6366f1, #a855f7)' }}
                       />
                     </div>
-                    <span className="text-xs text-veyra-elements-textTertiary shrink-0">{step}</span>
+                    <span className="text-xs text-veyra-elements-textTertiary shrink-0 w-32 text-right">{step.label}</span>
                   </div>
                 ))}
               </div>
             </div>
           </div>
         </motion.div>
+
+        {/* Stat badges */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.9 }}
+          className="flex flex-wrap justify-center gap-6 mt-10 text-sm text-veyra-elements-textTertiary"
+        >
+          {[
+            { label: 'AI models supported', value: '31+' },
+            { label: 'Avg. time to first app', value: '< 5 min' },
+            { label: 'Deployment targets', value: '4+' },
+          ].map((stat) => (
+            <div key={stat.label} className="flex items-center gap-2">
+              <span className="font-bold text-veyra-elements-textPrimary text-base">{stat.value}</span>
+              <span>{stat.label}</span>
+            </div>
+          ))}
+        </motion.div>
       </motion.section>
 
-      {/* ── SOCIAL PROOF STRIP ── */}
-      <section className="py-6 border-y border-veyra-elements-borderColor bg-veyra-elements-background-depth-2/50">
-        <div className="max-w-5xl mx-auto px-6 flex flex-wrap items-center justify-center gap-8 text-veyra-elements-textTertiary text-sm">
-          {['GPT-4o', 'Claude 3.5', 'Gemini 2.0', 'Llama 3', 'Mistral', 'Deepseek'].map((model) => (
-            <span key={model} className="flex items-center gap-1.5 font-medium">
-              <div className="i-ph:brain text-accent-400/60" />
-              {model}
-            </span>
-          ))}
+      {/* ── MODELS MARQUEE ── */}
+      <section className="py-6 border-y border-veyra-elements-borderColor overflow-hidden"
+        style={{ background: 'rgba(15,15,20,0.6)' }}>
+        <div className="mb-3 text-center">
+          <p className="text-xs text-veyra-elements-textTertiary uppercase tracking-widest font-semibold">Works with every major AI model</p>
         </div>
+        <MarqueeRow items={MODELS} />
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section className="py-24 px-6">
+      <section id="how-it-works" className="py-28 px-6">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
-            <p className="text-xs font-semibold text-accent-400 uppercase tracking-widest mb-3">How it works</p>
-            <h2 className="text-3xl md:text-4xl font-bold">From idea to app in minutes</h2>
+            <p className="text-xs font-bold text-accent-400 uppercase tracking-widest mb-3">How it works</p>
+            <h2 className="text-3xl md:text-5xl font-black">From idea to app in minutes</h2>
+            <p className="text-veyra-elements-textSecondary mt-4 text-lg max-w-xl mx-auto">No setup, no config files, no DevOps — just describe what you want.</p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {STEPS.map((step, i) => (
               <motion.div
                 key={step.num}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="relative p-6 rounded-2xl border border-veyra-elements-borderColor bg-veyra-elements-background-depth-2 hover:border-accent-500/30 transition-all"
+                transition={{ duration: 0.5, delay: i * 0.15 }}
+                className="relative group"
               >
-                <div className="text-5xl font-black text-veyra-elements-textTertiary/20 mb-4 leading-none select-none">{step.num}</div>
-                <h3 className="text-base font-semibold mb-2">{step.title}</h3>
-                <p className="text-sm text-veyra-elements-textSecondary leading-relaxed">{step.desc}</p>
+                {/* Connector */}
                 {i < STEPS.length - 1 && (
-                  <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-6 rounded-full border border-veyra-elements-borderColor bg-veyra-elements-background-depth-1 flex items-center justify-center z-10">
-                    <div className="i-ph:arrow-right text-xs text-veyra-elements-textTertiary" />
+                  <div className="hidden md:block absolute top-10 left-[calc(100%+12px)] right-0 w-6 z-10">
+                    <div className="w-6 h-px bg-gradient-to-r from-veyra-elements-borderColor to-transparent mt-0" style={{ marginTop: '40px' }} />
+                    <div className="i-ph:arrow-right text-veyra-elements-textTertiary text-xs absolute right-0" style={{ top: '34px' }} />
                   </div>
                 )}
+
+                <div className="p-6 rounded-2xl border border-veyra-elements-borderColor bg-veyra-elements-background-depth-2 hover:border-accent-500/30 transition-all group-hover:shadow-lg group-hover:shadow-accent-500/5">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${step.color} flex items-center justify-center mb-5 shadow-lg`}>
+                    <div className={`${step.icon} text-xl text-white`} />
+                  </div>
+                  <div className="text-4xl font-black text-veyra-elements-textTertiary/15 mb-3 leading-none select-none">{step.num}</div>
+                  <h3 className="text-base font-bold mb-2">{step.title}</h3>
+                  <p className="text-sm text-veyra-elements-textSecondary leading-relaxed">{step.desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -298,18 +445,22 @@ export function LandingPage() {
       </section>
 
       {/* ── FEATURES ── */}
-      <section className="py-24 px-6 border-t border-veyra-elements-borderColor">
-        <div className="max-w-5xl mx-auto">
+      <section id="features" className="py-28 px-6 border-t border-veyra-elements-borderColor relative overflow-hidden">
+        {/* Section glow */}
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(99,102,241,0.04) 0%, transparent 100%)' }} />
+
+        <div className="max-w-5xl mx-auto relative">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
-            <p className="text-xs font-semibold text-accent-400 uppercase tracking-widest mb-3">Features</p>
-            <h2 className="text-3xl md:text-4xl font-bold">Everything you need to ship</h2>
-            <p className="text-veyra-elements-textSecondary mt-3 max-w-xl mx-auto">
-              Veyra is a complete development environment powered by AI — not just a code generator.
+            <p className="text-xs font-bold text-accent-400 uppercase tracking-widest mb-3">Features</p>
+            <h2 className="text-3xl md:text-5xl font-black">Everything you need to ship</h2>
+            <p className="text-veyra-elements-textSecondary mt-4 text-lg max-w-xl mx-auto">
+              Veyra is a complete AI development environment — not just a code generator.
             </p>
           </motion.div>
 
@@ -317,17 +468,22 @@ export function LandingPage() {
             {FEATURES.map((f, i) => (
               <motion.div
                 key={f.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.07 }}
-                className="p-5 rounded-2xl border border-veyra-elements-borderColor bg-veyra-elements-background-depth-2 hover:bg-veyra-elements-background-depth-3 hover:border-veyra-elements-borderColorActive group transition-all"
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                className="relative p-6 rounded-2xl border border-veyra-elements-borderColor bg-veyra-elements-background-depth-2 hover:border-veyra-elements-borderColorActive group transition-all overflow-hidden cursor-default"
               >
-                <div className={`w-10 h-10 rounded-xl border flex items-center justify-center mb-4 ${f.bg}`}>
+                {/* Hover glow */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none rounded-2xl"
+                  style={{ background: `radial-gradient(ellipse at top left, ${f.glow} 0%, transparent 60%)` }} />
+
+                <div className={`relative w-11 h-11 rounded-xl border flex items-center justify-center mb-5 ${f.bg}`}>
                   <div className={`${f.icon} text-xl ${f.color}`} />
                 </div>
-                <h3 className="text-sm font-semibold mb-1.5">{f.title}</h3>
-                <p className="text-xs text-veyra-elements-textSecondary leading-relaxed">{f.desc}</p>
+                <h3 className="relative text-sm font-bold mb-2">{f.title}</h3>
+                <p className="relative text-xs text-veyra-elements-textSecondary leading-relaxed">{f.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -335,17 +491,17 @@ export function LandingPage() {
       </section>
 
       {/* ── TEMPLATES ── */}
-      <section className="py-24 px-6 border-t border-veyra-elements-borderColor">
+      <section id="templates" className="py-28 px-6 border-t border-veyra-elements-borderColor">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
-            <p className="text-xs font-semibold text-accent-400 uppercase tracking-widest mb-3">Templates</p>
-            <h2 className="text-3xl md:text-4xl font-bold">Start from a template</h2>
-            <p className="text-veyra-elements-textSecondary mt-3 max-w-xl mx-auto">
+            <p className="text-xs font-bold text-accent-400 uppercase tracking-widest mb-3">Templates</p>
+            <h2 className="text-3xl md:text-5xl font-black">Start from a template</h2>
+            <p className="text-veyra-elements-textSecondary mt-4 text-lg max-w-xl mx-auto">
               Pick a starting point and customize it with AI — or start from scratch with a prompt.
             </p>
           </motion.div>
@@ -358,13 +514,13 @@ export function LandingPage() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.07 }}
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleGetStarted}
-                className={`relative p-5 rounded-2xl border border-veyra-elements-borderColor bg-gradient-to-br ${t.gradient} text-left group hover:border-accent-500/40 transition-all`}
+                className={`relative p-6 rounded-2xl border border-veyra-elements-borderColor bg-gradient-to-br ${t.gradient} text-left group ${t.border} transition-all`}
               >
-                <div className="text-3xl mb-3">{t.emoji}</div>
-                <h3 className="text-sm font-semibold mb-2">{t.name}</h3>
+                <div className="text-4xl mb-4">{t.emoji}</div>
+                <h3 className="text-sm font-bold mb-2.5">{t.name}</h3>
                 <div className="flex flex-wrap gap-1.5">
                   {t.tags.map((tag) => (
                     <span key={tag} className="px-2 py-0.5 rounded-full text-xs bg-veyra-elements-background-depth-3/80 text-veyra-elements-textSecondary border border-veyra-elements-borderColor">
@@ -372,8 +528,8 @@ export function LandingPage() {
                     </span>
                   ))}
                 </div>
-                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="i-ph:arrow-right text-accent-400 text-sm" />
+                <div className="absolute top-5 right-5 opacity-0 group-hover:opacity-100 transition-all translate-x-1 group-hover:translate-x-0">
+                  <div className="i-ph:arrow-right text-accent-400" />
                 </div>
               </motion.button>
             ))}
@@ -381,62 +537,133 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section className="py-24 px-6 border-t border-veyra-elements-borderColor">
-        <div className="max-w-3xl mx-auto text-center">
+      {/* ── TESTIMONIALS ── */}
+      <section className="py-28 px-6 border-t border-veyra-elements-borderColor relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse 60% 60% at 50% 100%, rgba(168,85,247,0.05) 0%, transparent 100%)' }} />
+
+        <div className="max-w-5xl mx-auto relative">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <p className="text-xs font-bold text-accent-400 uppercase tracking-widest mb-3">Testimonials</p>
+            <h2 className="text-3xl md:text-5xl font-black">Loved by builders</h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-5">
+            {TESTIMONIALS.map((t, i) => (
+              <motion.div
+                key={t.name}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="p-6 rounded-2xl border border-veyra-elements-borderColor bg-veyra-elements-background-depth-2"
+              >
+                <div className="flex items-center gap-1 mb-4">
+                  {Array.from({ length: 5 }).map((_, j) => (
+                    <div key={j} className="i-ph:star-fill text-yellow-400 text-sm" />
+                  ))}
+                </div>
+                <p className="text-sm text-veyra-elements-textSecondary leading-relaxed mb-5">"{t.text}"</p>
+                <div className="flex items-center gap-3">
+                  <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${t.color} flex items-center justify-center text-xs font-bold text-white`}>
+                    {t.avatar}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold">{t.name}</p>
+                    <p className="text-xs text-veyra-elements-textTertiary">{t.role}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── BIG CTA ── */}
+      <section className="py-28 px-6 border-t border-veyra-elements-borderColor">
+        <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="relative p-12 rounded-3xl overflow-hidden border border-accent-500/20"
-            style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(168,85,247,0.08) 50%, rgba(236,72,153,0.05) 100%)' }}
+            className="relative p-14 rounded-3xl overflow-hidden"
+            style={{ border: '1px solid rgba(99,102,241,0.2)', background: 'linear-gradient(135deg, rgba(99,102,241,0.06) 0%, rgba(168,85,247,0.07) 50%, rgba(236,72,153,0.04) 100%)' }}
           >
+            {/* CTA glow effects */}
             <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-accent-500/10 rounded-full blur-3xl" />
+              <motion.div
+                className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-64 rounded-full blur-3xl"
+                style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)' }}
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 6, repeat: Infinity }}
+              />
+              <motion.div
+                className="absolute bottom-0 right-1/4 w-64 h-48 rounded-full blur-3xl"
+                style={{ background: 'radial-gradient(circle, rgba(236,72,153,0.08) 0%, transparent 70%)' }}
+                animate={{ scale: [1.1, 1, 1.1] }}
+                transition={{ duration: 8, repeat: Infinity, delay: 2 }}
+              />
             </div>
+
             <div className="relative">
-              <div className="w-14 h-14 rounded-2xl mx-auto mb-6 flex items-center justify-center border border-accent-500/30"
+              <div className="w-16 h-16 rounded-2xl mx-auto mb-8 flex items-center justify-center shadow-2xl shadow-accent-500/30"
                 style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}>
-                <svg width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="28" height="28" viewBox="0 0 20 20" fill="none">
                   <path d="M3 4L10 16L17 4" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                   <path d="M6.5 4L10 10.5L13.5 4" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to build something amazing?</h2>
-              <p className="text-veyra-elements-textSecondary mb-8 text-lg">
-                Join developers using Veyra to build and ship faster than ever before.
+              <h2 className="text-3xl md:text-5xl font-black mb-5">Ready to build something amazing?</h2>
+              <p className="text-veyra-elements-textSecondary mb-10 text-lg max-w-xl mx-auto">
+                Join thousands of builders using Veyra to ship faster than ever before.
               </p>
-              <button
-                onClick={handleGetStarted}
-                className="group px-8 py-3.5 rounded-xl font-semibold text-white flex items-center gap-2 mx-auto transition-all hover:scale-105 active:scale-95"
-                style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}
-              >
-                <div className="i-ph:sparkle-fill" />
-                Start building for free
-                <div className="i-ph:arrow-right group-hover:translate-x-0.5 transition-transform" />
-              </button>
-              <p className="mt-4 text-xs text-veyra-elements-textTertiary">
-                Already have an account?{' '}
-                <Link to="/login" className="text-accent-400 hover:text-accent-300 transition-colors">
-                  Sign in
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <motion.button
+                  onClick={handleGetStarted}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="group relative px-10 py-4 rounded-xl font-bold text-white flex items-center gap-2 overflow-hidden shadow-xl shadow-accent-500/30"
+                  style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}
+                >
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ background: 'linear-gradient(135deg, #818cf8, #c084fc)' }} />
+                  <span className="relative i-ph:sparkle-fill" />
+                  <span className="relative">Start building for free</span>
+                  <span className="relative i-ph:arrow-right group-hover:translate-x-0.5 transition-transform" />
+                </motion.button>
+                <Link
+                  to="/login"
+                  className="px-10 py-4 rounded-xl text-sm font-medium border border-veyra-elements-borderColor text-veyra-elements-textSecondary hover:text-veyra-elements-textPrimary hover:border-accent-500/40 transition-all"
+                >
+                  Sign in to your account
                 </Link>
-              </p>
+              </div>
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="border-t border-veyra-elements-borderColor py-8 px-6">
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}>
-              <svg width="12" height="12" viewBox="0 0 20 20" fill="none">
+      <footer className="border-t border-veyra-elements-borderColor py-10 px-6">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center shadow-md"
+              style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}>
+              <svg width="13" height="13" viewBox="0 0 20 20" fill="none">
                 <path d="M3 4L10 16L17 4" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
-            <span className="text-sm font-semibold">Veyra</span>
+            <span className="text-sm font-bold">Veyra</span>
             <span className="text-xs text-veyra-elements-textTertiary">AI App Builder</span>
+          </div>
+          <div className="flex items-center gap-6 text-xs text-veyra-elements-textTertiary">
+            <Link to="/login" className="hover:text-veyra-elements-textSecondary transition-colors">Sign in</Link>
+            <Link to="/signup" className="hover:text-veyra-elements-textSecondary transition-colors">Sign up</Link>
           </div>
           <p className="text-xs text-veyra-elements-textTertiary">
             © {new Date().getFullYear()} Veyra. Built with AI.

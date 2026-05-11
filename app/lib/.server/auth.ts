@@ -13,8 +13,6 @@ import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from '~/lib/.server/db';
 
-const PROD_URL = 'https://devonz--tinottmina.replit.app';
-
 function getBaseURL(): string {
   if (process.env.BETTER_AUTH_URL) {
     return process.env.BETTER_AUTH_URL;
@@ -31,7 +29,6 @@ function getTrustedOrigins(): string[] {
   const origins = new Set<string>();
 
   origins.add(getBaseURL());
-  origins.add(PROD_URL);
 
   if (process.env.REPLIT_DEV_DOMAIN) {
     origins.add(`https://${process.env.REPLIT_DEV_DOMAIN}`);
@@ -39,6 +36,13 @@ function getTrustedOrigins(): string[] {
 
   if (process.env.BETTER_AUTH_URL) {
     origins.add(process.env.BETTER_AUTH_URL);
+  }
+
+  // Allow any replit.app deployment domains
+  if (process.env.REPLIT_DOMAINS) {
+    for (const domain of process.env.REPLIT_DOMAINS.split(',')) {
+      origins.add(`https://${domain.trim()}`);
+    }
   }
 
   return [...origins];
