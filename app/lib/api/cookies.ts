@@ -31,15 +31,15 @@ function decryptCookieValue(value: string): string {
   const ciphertext = value.slice(ENC_PREFIX.length);
 
   if (!_decryptor) {
-    logger.warn('Encrypted cookie value found but no decryptor registered, returning raw ciphertext');
-    return ciphertext;
+    logger.warn('Encrypted cookie value found but no decryptor registered, returning empty string');
+    return '';
   }
 
   try {
     return _decryptor(ciphertext);
   } catch (error) {
-    logger.warn('Failed to decrypt cookie value, falling back to raw ciphertext:', error);
-    return ciphertext;
+    logger.warn('Failed to decrypt cookie value (key mismatch or corruption), returning empty string:', error);
+    return '';
   }
 }
 
