@@ -14,12 +14,14 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from '~/lib/.server/db';
 
 function getBaseURL(): string {
-  if (process.env.BETTER_AUTH_URL) {
-    return process.env.BETTER_AUTH_URL;
-  }
-
+  // Prefer the live Replit dev domain so cookies always match the current URL,
+  // even when BETTER_AUTH_URL is stale (e.g. after a workspace restart).
   if (process.env.REPLIT_DEV_DOMAIN) {
     return `https://${process.env.REPLIT_DEV_DOMAIN}`;
+  }
+
+  if (process.env.BETTER_AUTH_URL) {
+    return process.env.BETTER_AUTH_URL;
   }
 
   return 'http://localhost:5000';

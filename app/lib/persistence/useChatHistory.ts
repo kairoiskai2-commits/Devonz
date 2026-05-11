@@ -22,6 +22,7 @@ import type { FileMap } from '~/lib/stores/files';
 import type { IChatMetadata, Snapshot } from './types';
 import { runtime } from '~/lib/runtime';
 import { createScopedLogger } from '~/utils/logger';
+import { chatSavedAt } from './chatSavedAtom';
 
 const logger = createScopedLogger('ChatHistory');
 
