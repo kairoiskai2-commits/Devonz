@@ -23,6 +23,12 @@ import ZaiProvider from './providers/z-ai';
 import PollinationsProvider from './providers/pollinations';
 import PuterProvider from './providers/puter';
 import TransformersProvider from './providers/transformers';
+import LogfareProvider from './providers/logfare';
+import ArliAIProvider from './providers/arli-ai';
+import ShuttleAIProvider from './providers/shuttleai';
+import CloudynicProvider from './providers/cloudynic';
+import ApiFreeLLMProvider from './providers/apifreellm';
+import TypeGPTProvider from './providers/typegpt';
 
 export {
   AnthropicProvider,
@@ -50,4 +56,10 @@ export {
   PollinationsProvider,
   PuterProvider,
   TransformersProvider,
+  LogfareProvider,
+  ArliAIProvider,
+  ShuttleAIProvider,
+  CloudynicProvider,
+  ApiFreeLLMProvider,
+  TypeGPTProvider,
 };
