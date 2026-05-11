@@ -20,6 +20,9 @@ import AmazonBedrockProvider from './providers/amazon-bedrock';
 import GithubProvider from './providers/github';
 import MoonshotProvider from './providers/moonshot';
 import ZaiProvider from './providers/z-ai';
+import PollinationsProvider from './providers/pollinations';
+import PuterProvider from './providers/puter';
+import TransformersProvider from './providers/transformers';
 
 export {
   AnthropicProvider,
@@ -44,4 +47,7 @@ export {
   AmazonBedrockProvider,
   GithubProvider,
   ZaiProvider,
+  PollinationsProvider,
+  PuterProvider,
+  TransformersProvider,
 };
