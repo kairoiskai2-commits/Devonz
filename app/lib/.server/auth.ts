@@ -12,6 +12,10 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from '~/lib/.server/db';
+<<<<<<< HEAD
+=======
+import { sendEmail, passwordResetEmailHtml } from '~/lib/.server/email';
+>>>>>>> e895246 (fresh repo)
 
 function getBaseURL(): string {
   if (process.env.BETTER_AUTH_URL) {
@@ -76,6 +80,17 @@ export const auth = betterAuth({
     enabled: true,
     requireEmailVerification: false,
     minPasswordLength: 8,
+<<<<<<< HEAD
+=======
+    sendResetPassword: async ({ user, url }) => {
+      await sendEmail({
+        to: user.email,
+        subject: 'Reset your Veyra password',
+        html: passwordResetEmailHtml(url, user.name || user.email),
+        text: `Reset your password: ${url}`,
+      });
+    },
+>>>>>>> e895246 (fresh repo)
   },
 
   socialProviders,

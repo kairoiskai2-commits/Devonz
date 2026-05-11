@@ -114,6 +114,9 @@ type Pages = {
   "/api/vercel-user": {
     params: {};
   };
+  "/forgot-password": {
+    params: {};
+  };
   "/api/bug-report": {
     params: {};
   };
@@ -124,6 +127,9 @@ type Pages = {
     params: {};
   };
   "/api/web-search": {
+    params: {};
+  };
+  "/reset-password": {
     params: {};
   };
   "/api/git-clone": {
@@ -227,7 +233,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/api/configured-providers" | "/api/auto-deploy-status" | "/api/system/diagnostics" | "/api/mcp-update-config" | "/api/runtime/terminal" | "/api/system/disk-info" | "/api/export-api-keys" | "/api/github-branches" | "/api/github-template" | "/api/gitlab-branches" | "/api/gitlab-projects" | "/api/preview-proxy/*" | "/api/system/git-info" | "/api/auth-providers" | "/api/check-env-keys" | "/api/netlify-deploy" | "/api/runtime/search" | "/api/vercel-domains" | "/api/check-env-key" | "/api/sentry-tunnel" | "/api/supabase-user" | "/api/vercel-deploy" | "/api/version-check" | "/api/github-stats" | "/api/netlify-user" | "/api/runtime/exec" | "/api/vercel-proxy" | "/api/auto-deploy" | "/api/git-proxy/*" | "/api/github-user" | "/api/runtime/git" | "/api/vercel-user" | "/api/bug-report" | "/api/db/migrate" | "/api/runtime/fs" | "/api/web-search" | "/api/git-clone" | "/api/mcp-check" | "/api/v1/status" | "/preview/:port" | "/api/db/chats" | "/api/db/chats/:id" | "/api/enhancer" | "/api/git-info" | "/api/supabase" | "/api/supabase/variables" | "/api/supabase/query" | "/api/encrypt" | "/api/llmcall" | "/api/v1/chat" | "/api/auth/*" | "/api/deploy" | "/api/health" | "/api/models" | "/api/models/:provider" | "/api/update" | "/templates" | "/api/chat" | "/chat/:id" | "/signup" | "/admin" | "/login" | "/git" | "/*";
+    page: "/" | "/api/configured-providers" | "/api/auto-deploy-status" | "/api/system/diagnostics" | "/api/mcp-update-config" | "/api/runtime/terminal" | "/api/system/disk-info" | "/api/export-api-keys" | "/api/github-branches" | "/api/github-template" | "/api/gitlab-branches" | "/api/gitlab-projects" | "/api/preview-proxy/*" | "/api/system/git-info" | "/api/auth-providers" | "/api/check-env-keys" | "/api/netlify-deploy" | "/api/runtime/search" | "/api/vercel-domains" | "/api/check-env-key" | "/api/sentry-tunnel" | "/api/supabase-user" | "/api/vercel-deploy" | "/api/version-check" | "/api/github-stats" | "/api/netlify-user" | "/api/runtime/exec" | "/api/vercel-proxy" | "/api/auto-deploy" | "/api/git-proxy/*" | "/api/github-user" | "/api/runtime/git" | "/api/vercel-user" | "/forgot-password" | "/api/bug-report" | "/api/db/migrate" | "/api/runtime/fs" | "/api/web-search" | "/reset-password" | "/api/git-clone" | "/api/mcp-check" | "/api/v1/status" | "/preview/:port" | "/api/db/chats" | "/api/db/chats/:id" | "/api/enhancer" | "/api/git-info" | "/api/supabase" | "/api/supabase/variables" | "/api/supabase/query" | "/api/encrypt" | "/api/llmcall" | "/api/v1/chat" | "/api/auth/*" | "/api/deploy" | "/api/health" | "/api/models" | "/api/models/:provider" | "/api/update" | "/templates" | "/api/chat" | "/chat/:id" | "/signup" | "/admin" | "/login" | "/git" | "/*";
   };
   "routes/api.configured-providers.ts": {
     id: "routes/api.configured-providers";
@@ -357,6 +363,10 @@ type RouteFiles = {
     id: "routes/api.vercel-user";
     page: "/api/vercel-user";
   };
+  "routes/forgot-password.tsx": {
+    id: "routes/forgot-password";
+    page: "/forgot-password";
+  };
   "routes/api.bug-report.ts": {
     id: "routes/api.bug-report";
     page: "/api/bug-report";
@@ -372,6 +382,10 @@ type RouteFiles = {
   "routes/api.web-search.ts": {
     id: "routes/api.web-search";
     page: "/api/web-search";
+  };
+  "routes/reset-password.tsx": {
+    id: "routes/reset-password";
+    page: "/reset-password";
   };
   "routes/api.git-clone.ts": {
     id: "routes/api.git-clone";
@@ -525,10 +539,12 @@ type RouteModules = {
   "routes/api.github-user": typeof import("./app/routes/api.github-user.ts");
   "routes/api.runtime.git": typeof import("./app/routes/api.runtime.git.ts");
   "routes/api.vercel-user": typeof import("./app/routes/api.vercel-user.ts");
+  "routes/forgot-password": typeof import("./app/routes/forgot-password.tsx");
   "routes/api.bug-report": typeof import("./app/routes/api.bug-report.ts");
   "routes/api.db.migrate": typeof import("./app/routes/api.db.migrate.ts");
   "routes/api.runtime.fs": typeof import("./app/routes/api.runtime.fs.ts");
   "routes/api.web-search": typeof import("./app/routes/api.web-search.ts");
+  "routes/reset-password": typeof import("./app/routes/reset-password.tsx");
   "routes/api.git-clone": typeof import("./app/routes/api.git-clone.ts");
   "routes/api.mcp-check": typeof import("./app/routes/api.mcp-check.ts");
   "routes/api.v1.status": typeof import("./app/routes/api.v1.status.ts");

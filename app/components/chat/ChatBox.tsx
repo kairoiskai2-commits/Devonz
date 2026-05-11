@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 import React, { useState, useCallback, lazy, Suspense } from 'react';
+=======
+import React, { useState, useCallback, useEffect, lazy, Suspense } from 'react';
+import { useStore } from '@nanostores/react';
+>>>>>>> e895246 (fresh repo)
 import { clientLazy } from '~/utils/react';
 import { cn } from '~/utils/cn';
 import { PROVIDER_LIST } from '~/utils/constants';
@@ -17,6 +22,10 @@ import { ChatModeSelector } from './ChatModeSelector';
 import { AgentToggle } from './AgentToggle';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { TabType } from '~/components/@settings/core/types';
+<<<<<<< HEAD
+=======
+import { chatSavedAt } from '~/lib/persistence/chatSavedAtom';
+>>>>>>> e895246 (fresh repo)
 
 const SupabaseConnection = lazy(() => import('./SupabaseConnection').then((m) => ({ default: m.SupabaseConnection })));
 const ExpoQrModal = lazy(() => import('~/components/workbench/ExpoQrModal').then((m) => ({ default: m.ExpoQrModal })));
@@ -81,6 +90,19 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [settingsInitialTab, setSettingsInitialTab] = useState<TabType | undefined>(undefined);
   const [showMoreTools, setShowMoreTools] = useState(false);
+<<<<<<< HEAD
+=======
+  const [showSaved, setShowSaved] = useState(false);
+
+  const savedAt = useStore(chatSavedAt);
+
+  useEffect(() => {
+    if (!savedAt) return;
+    setShowSaved(true);
+    const t = setTimeout(() => setShowSaved(false), 2500);
+    return () => clearTimeout(t);
+  }, [savedAt]);
+>>>>>>> e895246 (fresh repo)
 
   const handleOpenSettings = useCallback((tab?: string) => {
     setIsModelSelectorOpen(false);
@@ -371,6 +393,25 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
               </IconButton>
             </div>
 
+<<<<<<< HEAD
+=======
+            {/* Save checkpoint indicator */}
+            <AnimatePresence>
+              {showSaved && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.85 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.85 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex items-center gap-1 text-xs text-veyra-elements-textTertiary select-none pointer-events-none"
+                >
+                  <div className="i-ph:check-circle-duotone text-green-500 text-sm" />
+                  <span>Saved</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+>>>>>>> e895246 (fresh repo)
             <Suspense>
               <SupabaseConnection />
               <ExpoQrModal open={props.qrModalOpen} onClose={() => props.setQrModalOpen(false)} />

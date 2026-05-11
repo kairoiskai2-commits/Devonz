@@ -50,6 +50,11 @@ if (db) {
 export const chatId = atom<string | undefined>(undefined);
 export const description = atom<string | undefined>(undefined);
 export const chatMetadata = atom<IChatMetadata | undefined>(undefined);
+<<<<<<< HEAD
+=======
+
+export { chatSavedAt } from './chatSavedAtom';
+>>>>>>> e895246 (fresh repo)
 export function useChatHistory() {
   const navigate = useNavigate();
   const { id: mixedId } = useLoaderData<{ id?: string }>();
@@ -541,6 +546,11 @@ export function useChatHistory() {
           undefined,
           chatMetadata.get(),
         );
+<<<<<<< HEAD
+=======
+
+        chatSavedAt.set(Date.now());
+>>>>>>> e895246 (fresh repo)
       } finally {
         isStoringRef.current = false;
 
