@@ -1,0 +1,44 @@
+name: Feature Request
+description: Got an idea? We'd love to hear it!
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Got a feature idea? Awesome — just describe what you'd like. Only the first field is required.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What would you like?
+      description: Describe the feature or improvement you have in mind.
+      placeholder: "e.g. It would be great to compare outputs from two AI models side-by-side"
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Why do you need this?
+      description: What problem does this solve for you?
+      placeholder: "e.g. I switch between models a lot and it's hard to compare results"
+    validations:
+      required: false
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Any ideas on how it should work?
+      description: Optional — feel free to sketch out a solution or leave it to us.
+      placeholder: "e.g. A split-panel view that sends the same prompt to two models"
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Anything else?
+      description: Links, screenshots, mockups, references to similar tools — whatever helps.
+    validations:
+      required: false

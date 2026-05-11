@@ -1,0 +1,86 @@
+import { memo, useEffect, useState } from 'react';
+import { safeCodeToHtml, type BundledLanguage, type SpecialLanguage } from '~/utils/shiki-highlighter';
+import { cn } from '~/utils/cn';
+import { createScopedLogger } from '~/utils/logger';
+
+import styles from './CodeBlock.module.scss';
+
+const logger = createScopedLogger('CodeBlock');
+
+interface CodeBlockProps {
+  className?: string;
+  code: string;
+  language?: BundledLanguage | SpecialLanguage;
+  theme?: 'light-plus' | 'dark-plus';
+  disableCopy?: boolean;
+}
+
+export const CodeBlock = memo(
+  ({ className, code, language = 'plaintext', theme = 'dark-plus', disableCopy = false }: CodeBlockProps) => {
+    const [html, setHTML] = useState<string | undefined>(undefined);
+    const [copied, setCopied] = useState(false);
+
+    const copyToClipboard = () => {
+      if (copied) {
+        return;
+      }
+
+      navigator.clipboard.writeText(code).catch(() => {
+        /* clipboard unavailable */
+      });
+
+      setCopied(true);
+
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    };
+
+    useEffect(() => {
+      logger.trace(`Language = ${language}`);
+
+      let cancelled = false;
+
+      safeCodeToHtml(code, language ?? 'plaintext', theme).then((result) => {
+        if (!cancelled) {
+          setHTML(result);
+        }
+      });
+
+      return () => {
+        cancelled = true;
+      };
+    }, [code, language, theme]);
+
+    return (
+      <div className={cn('relative group text-left', className)}>
+        <div
+          className={cn(
+            styles.CopyButtonContainer,
+            'bg-transparent absolute top-[10px] right-[10px] rounded-md z-10 text-lg flex items-center justify-center opacity-0 group-hover:opacity-100',
+            {
+              'rounded-l-0 opacity-100': copied,
+            },
+          )}
+        >
+          {!disableCopy && (
+            <button
+              className={cn(
+                'flex items-center bg-accent-500 p-[6px] justify-center before:bg-white before:rounded-l-md before:text-gray-500 before:border-r before:border-gray-300 rounded-md transition-theme',
+                {
+                  'before:opacity-0': !copied,
+                  'before:opacity-100': copied,
+                },
+              )}
+              title="Copy Code"
+              onClick={() => copyToClipboard()}
+            >
+              <div className="i-ph:clipboard-text-duotone"></div>
+            </button>
+          )}
+        </div>
+        <div dangerouslySetInnerHTML={{ __html: html ?? '' }}></div>
+      </div>
+    );
+  },
+);

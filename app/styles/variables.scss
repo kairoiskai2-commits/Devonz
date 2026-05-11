@@ -1,0 +1,262 @@
+/* Color Tokens Light Theme */
+:root,
+:root[data-theme='light'] {
+  --veyra-elements-borderColor: theme('colors.alpha.gray.10');
+  --veyra-elements-borderColorActive: theme('colors.accent.600');
+
+  --veyra-elements-bg-depth-1: theme('colors.white');
+  --veyra-elements-bg-depth-2: theme('colors.gray.50');
+  --veyra-elements-bg-depth-3: theme('colors.gray.200');
+  --veyra-elements-bg-depth-4: theme('colors.alpha.gray.5');
+
+  --veyra-elements-textPrimary: theme('colors.gray.950');
+  --veyra-elements-textSecondary: theme('colors.gray.600');
+  --veyra-elements-textTertiary: theme('colors.gray.500');
+
+  --veyra-elements-code-background: theme('colors.gray.100');
+  --veyra-elements-code-text: theme('colors.gray.950');
+
+  --veyra-elements-button-primary-background: theme('colors.alpha.accent.10');
+  --veyra-elements-button-primary-backgroundHover: theme('colors.alpha.accent.20');
+  --veyra-elements-button-primary-text: theme('colors.accent.500');
+
+  --veyra-elements-button-secondary-background: theme('colors.alpha.gray.5');
+  --veyra-elements-button-secondary-backgroundHover: theme('colors.alpha.gray.10');
+  --veyra-elements-button-secondary-text: theme('colors.gray.950');
+
+  --veyra-elements-button-danger-background: theme('colors.alpha.red.10');
+  --veyra-elements-button-danger-backgroundHover: theme('colors.alpha.red.20');
+  --veyra-elements-button-danger-text: theme('colors.red.500');
+
+  --veyra-elements-item-contentDefault: theme('colors.alpha.gray.50');
+  --veyra-elements-item-contentActive: theme('colors.gray.950');
+  --veyra-elements-item-contentAccent: theme('colors.accent.700');
+  --veyra-elements-item-contentDanger: theme('colors.red.500');
+  --veyra-elements-item-backgroundDefault: rgba(0, 0, 0, 0);
+  --veyra-elements-item-backgroundActive: theme('colors.alpha.gray.5');
+  --veyra-elements-item-backgroundAccent: theme('colors.alpha.accent.10');
+  --veyra-elements-item-backgroundDanger: theme('colors.alpha.red.10');
+
+  --veyra-elements-loader-background: theme('colors.alpha.gray.10');
+  --veyra-elements-loader-progress: theme('colors.accent.500');
+
+  --veyra-elements-artifacts-background: theme('colors.white');
+  --veyra-elements-artifacts-backgroundHover: theme('colors.alpha.gray.2');
+  --veyra-elements-artifacts-borderColor: var(--veyra-elements-borderColor);
+  --veyra-elements-artifacts-inlineCode-background: theme('colors.gray.100');
+  --veyra-elements-artifacts-inlineCode-text: var(--veyra-elements-textPrimary);
+
+  --veyra-elements-actions-background: theme('colors.white');
+  --veyra-elements-actions-code-background: theme('colors.gray.800');
+
+  --veyra-elements-messages-background: theme('colors.gray.100');
+  --veyra-elements-messages-linkColor: theme('colors.accent.500');
+  --veyra-elements-messages-code-background: theme('colors.gray.800');
+  --veyra-elements-messages-inlineCode-background: theme('colors.gray.200');
+  --veyra-elements-messages-inlineCode-text: theme('colors.gray.800');
+
+  --veyra-elements-icon-success: theme('colors.green.500');
+  --veyra-elements-icon-error: theme('colors.red.500');
+  --veyra-elements-icon-primary: theme('colors.gray.950');
+  --veyra-elements-icon-secondary: theme('colors.gray.600');
+  --veyra-elements-icon-tertiary: theme('colors.gray.500');
+
+  --veyra-elements-dividerColor: theme('colors.gray.100');
+
+  --veyra-elements-prompt-background: theme('colors.alpha.white.80');
+
+  --veyra-chat-bg: linear-gradient(145deg, rgba(200, 215, 235, 0.3), rgba(245, 245, 245, 0.95));
+  --veyra-chat-border: rgba(180, 195, 215, 0.5);
+  --veyra-chat-shadow: rgba(180, 195, 215, 0.2);
+
+  --veyra-elements-sidebar-dropdownShadow: theme('colors.alpha.gray.10');
+  --veyra-elements-sidebar-buttonBackgroundDefault: theme('colors.alpha.accent.10');
+  --veyra-elements-sidebar-buttonBackgroundHover: theme('colors.alpha.accent.20');
+  --veyra-elements-sidebar-buttonText: theme('colors.accent.700');
+
+  --veyra-elements-preview-addressBar-background: theme('colors.gray.100');
+  --veyra-elements-preview-addressBar-backgroundHover: theme('colors.alpha.gray.5');
+  --veyra-elements-preview-addressBar-backgroundActive: theme('colors.white');
+  --veyra-elements-preview-addressBar-text: var(--veyra-elements-textSecondary);
+  --veyra-elements-preview-addressBar-textActive: var(--veyra-elements-textPrimary);
+
+  --veyra-elements-terminals-background: theme('colors.white');
+  --veyra-elements-terminals-buttonBackground: var(--veyra-elements-bg-depth-4);
+
+  --veyra-elements-cta-background: theme('colors.gray.100');
+  --veyra-elements-cta-text: theme('colors.gray.950');
+
+  /* Terminal Colors */
+  --veyra-terminal-background: var(--veyra-elements-terminals-background);
+  --veyra-terminal-foreground: #333333;
+  --veyra-terminal-selection-background: #00000040;
+  --veyra-terminal-black: #000000;
+  --veyra-terminal-red: #cd3131;
+  --veyra-terminal-green: #00bc00;
+  --veyra-terminal-yellow: #949800;
+  --veyra-terminal-blue: #0451a5;
+  --veyra-terminal-magenta: #bc05bc;
+  --veyra-terminal-cyan: #0598bc;
+  --veyra-terminal-white: #555555;
+  --veyra-terminal-brightBlack: #686868;
+  --veyra-terminal-brightRed: #cd3131;
+  --veyra-terminal-brightGreen: #00bc00;
+  --veyra-terminal-brightYellow: #949800;
+  --veyra-terminal-brightBlue: #0451a5;
+  --veyra-terminal-brightMagenta: #bc05bc;
+  --veyra-terminal-brightCyan: #0598bc;
+  --veyra-terminal-brightWhite: #a5a5a5;
+  --modern-scrollbar-thumb-background: rgba(100, 100, 100, 0.3); // Example light theme color
+  --modern-scrollbar-thumb-backgroundHover: rgba(74, 74, 74, 0.8);
+}
+
+/* Color Tokens Dark Theme - Blink.new Inspired */
+:root,
+:root[data-theme='dark'] {
+  --veyra-elements-borderColor: rgba(255, 255, 255, 0.08);
+  --veyra-elements-borderColorActive: theme('colors.accent.500');
+
+  /* Liquid Glass backgrounds */
+  --veyra-elements-bg-depth-1: #0b0d13;
+  --veyra-elements-bg-depth-2: #0b0d13;
+  --veyra-elements-bg-depth-3: #1a2332;
+  --veyra-elements-bg-depth-4: rgba(255, 255, 255, 0.03);
+
+  --veyra-elements-textPrimary: #e6edf3;
+  --veyra-elements-textSecondary: #8b949e;
+  --veyra-elements-textTertiary: #6e7681;
+
+  --veyra-elements-editor-backgroundColor: #0d1117;
+  --veyra-elements-code-background: #161b22;
+  --veyra-elements-code-text: #e6edf3;
+
+  --veyra-elements-button-primary-background: rgba(59, 130, 246, 0.15);
+  --veyra-elements-button-primary-backgroundHover: rgba(59, 130, 246, 0.25);
+  --veyra-elements-button-primary-text: #60a5fa;
+
+  --veyra-elements-button-secondary-background: rgba(255, 255, 255, 0.05);
+  --veyra-elements-button-secondary-backgroundHover: rgba(255, 255, 255, 0.1);
+  --veyra-elements-button-secondary-text: #e6edf3;
+
+  --veyra-elements-button-danger-background: rgba(239, 68, 68, 0.1);
+  --veyra-elements-button-danger-backgroundHover: rgba(239, 68, 68, 0.2);
+  --veyra-elements-button-danger-text: #f87171;
+
+  --veyra-elements-item-contentDefault: rgba(255, 255, 255, 0.5);
+  --veyra-elements-item-contentActive: #e6edf3;
+  --veyra-elements-item-contentAccent: #06b6d4;
+  --veyra-elements-item-contentDanger: #f87171;
+  --veyra-elements-item-backgroundDefault: rgba(255, 255, 255, 0);
+  --veyra-elements-item-backgroundActive: rgba(255, 255, 255, 0.08);
+  --veyra-elements-item-backgroundAccent: rgba(6, 182, 212, 0.15);
+  --veyra-elements-item-backgroundDanger: rgba(239, 68, 68, 0.1);
+
+  --veyra-elements-loader-background: rgba(255, 255, 255, 0.05);
+  --veyra-elements-loader-progress: #3b82f6;
+
+  --veyra-elements-artifacts-background: #131a24;
+  --veyra-elements-artifacts-backgroundHover: rgba(255, 255, 255, 0.05);
+  --veyra-elements-artifacts-borderColor: var(--veyra-elements-borderColor);
+  --veyra-elements-artifacts-inlineCode-background: #1a2332;
+  --veyra-elements-artifacts-inlineCode-text: #e6edf3;
+
+  --veyra-elements-actions-background: #131a24;
+  --veyra-elements-actions-code-background: #161b22;
+
+  --veyra-elements-messages-background: #1a2332;
+  --veyra-elements-messages-linkColor: #60a5fa;
+  --veyra-elements-messages-code-background: #0d1117;
+  --veyra-elements-messages-inlineCode-background: #21262d;
+  --veyra-elements-messages-inlineCode-text: var(--veyra-elements-textPrimary);
+
+  --veyra-elements-icon-success: #4ade80;
+  --veyra-elements-icon-error: #f87171;
+  --veyra-elements-icon-primary: #e6edf3;
+  --veyra-elements-icon-secondary: #8b949e;
+  --veyra-elements-icon-tertiary: #6e7681;
+
+  --veyra-elements-dividerColor: rgba(255, 255, 255, 0.08);
+
+  --veyra-elements-prompt-background: rgba(19, 26, 36, 0.9);
+
+  --veyra-chat-bg: linear-gradient(145deg, rgba(30, 58, 95, 0.15), rgba(26, 26, 26, 0.95));
+  --veyra-chat-border: rgba(61, 90, 127, 0.4);
+  --veyra-chat-shadow: rgba(30, 58, 95, 0.2);
+
+  --veyra-elements-sidebar-dropdownShadow: rgba(0, 0, 0, 0.3);
+  --veyra-elements-sidebar-buttonBackgroundDefault: rgba(59, 130, 246, 0.1);
+  --veyra-elements-sidebar-buttonBackgroundHover: rgba(59, 130, 246, 0.2);
+  --veyra-elements-sidebar-buttonText: #60a5fa;
+
+  --veyra-elements-preview-addressBar-background: #0d1117;
+  --veyra-elements-preview-addressBar-backgroundHover: rgba(255, 255, 255, 0.05);
+  --veyra-elements-preview-addressBar-backgroundActive: #0d1117;
+  --veyra-elements-preview-addressBar-text: var(--veyra-elements-textSecondary);
+  --veyra-elements-preview-addressBar-textActive: var(--veyra-elements-textPrimary);
+
+  --veyra-elements-terminals-background: #0b0d13;
+  --veyra-elements-terminals-buttonBackground: #1a2332;
+
+  --veyra-elements-cta-background: rgba(255, 255, 255, 0.08);
+  --veyra-elements-cta-text: #e6edf3;
+
+  /* Terminal Colors */
+  --veyra-terminal-background: #0b0d13;
+  --veyra-terminal-foreground: #e6edf3;
+  --veyra-terminal-selection-background: #264f78;
+  --veyra-terminal-black: #0d1117;
+  --veyra-terminal-red: #f87171;
+  --veyra-terminal-green: #4ade80;
+  --veyra-terminal-yellow: #fcd34d;
+  --veyra-terminal-blue: #60a5fa;
+  --veyra-terminal-magenta: #c084fc;
+  --veyra-terminal-cyan: #22d3ee;
+  --veyra-terminal-white: #e6edf3;
+  --veyra-terminal-brightBlack: #6e7681;
+  --veyra-terminal-brightRed: #fca5a5;
+  --veyra-terminal-brightGreen: #86efac;
+  --veyra-terminal-brightYellow: #fde68a;
+  --veyra-terminal-brightBlue: #93c5fd;
+  --veyra-terminal-brightMagenta: #d8b4fe;
+  --veyra-terminal-brightCyan: #67e8f9;
+  --veyra-terminal-brightWhite: #ffffff;
+  --modern-scrollbar-thumb-background: #444444;
+  --modern-scrollbar-thumb-backgroundHover: #555555;
+  --modern-scrollbar-track-background: #131a24;
+}
+
+/*
+ * Element Tokens
+ *
+ * Hierarchy: Element Token -> (Element Token | Color Tokens) -> Primitives
+ */
+:root {
+  --header-height: 54px;
+  --chat-max-width: 42rem;
+  --chat-min-width: min(533px, 100vw);
+  --workbench-width: min(calc(100% - var(--chat-min-width)), 2536px);
+  --workbench-inner-width: var(--workbench-width);
+  --workbench-left: calc(100% - var(--workbench-width));
+
+  /* Terminal */
+  --veyra-elements-terminal-backgroundColor: var(--veyra-terminal-background);
+  --veyra-elements-terminal-textColor: var(--veyra-terminal-foreground);
+  --veyra-elements-terminal-cursorColor: var(--veyra-terminal-foreground);
+  --veyra-elements-terminal-selection-backgroundColor: var(--veyra-terminal-selection-background);
+  --veyra-elements-terminal-color-black: var(--veyra-terminal-black);
+  --veyra-elements-terminal-color-red: var(--veyra-terminal-red);
+  --veyra-elements-terminal-color-green: var(--veyra-terminal-green);
+  --veyra-elements-terminal-color-yellow: var(--veyra-terminal-yellow);
+  --veyra-elements-terminal-color-blue: var(--veyra-terminal-blue);
+  --veyra-elements-terminal-color-magenta: var(--veyra-terminal-magenta);
+  --veyra-elements-terminal-color-cyan: var(--veyra-terminal-cyan);
+  --veyra-elements-terminal-color-white: var(--veyra-terminal-white);
+  --veyra-elements-terminal-color-brightBlack: var(--veyra-terminal-brightBlack);
+  --veyra-elements-terminal-color-brightRed: var(--veyra-terminal-brightRed);
+  --veyra-elements-terminal-color-brightGreen: var(--veyra-terminal-brightGreen);
+  --veyra-elements-terminal-color-brightYellow: var(--veyra-terminal-brightYellow);
+  --veyra-elements-terminal-color-brightBlue: var(--veyra-terminal-brightBlue);
+  --veyra-elements-terminal-color-brightMagenta: var(--veyra-terminal-brightMagenta);
+  --veyra-elements-terminal-color-brightCyan: var(--veyra-terminal-brightCyan);
+  --veyra-elements-terminal-color-brightWhite: var(--veyra-terminal-brightWhite);
+}

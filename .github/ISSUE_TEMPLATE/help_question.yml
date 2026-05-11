@@ -1,0 +1,48 @@
+name: Help / Question
+description: Stuck on something? Ask away — no question is too basic!
+title: "[Question]: "
+labels: ["question", "help"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Need help? Just ask! Only the first field is required.
+
+        You might also find answers in the [README](https://github.com/zebbern/Devonz), [docs](https://github.com/zebbern/Devonz/tree/main/docs), or [existing issues](https://github.com/zebbern/Devonz/issues?q=is%3Aissue+label%3Aquestion).
+
+  - type: textarea
+    id: question
+    attributes:
+      label: What do you need help with?
+      description: Describe what you're trying to do and where you're stuck.
+      placeholder: "e.g. I can't get Ollama models to show up in the provider dropdown"
+    validations:
+      required: true
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried?
+      description: Any steps you've taken so far? (helps us avoid suggesting things you already did)
+      placeholder: "e.g. Set OLLAMA_BASE_URL in .env.local and restarted the dev server"
+    validations:
+      required: false
+
+  - type: textarea
+    id: error-output
+    attributes:
+      label: Error output
+      description: Any errors from the console or terminal?
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Environment info
+      description: OS, browser, Node version — whatever you know.
+      render: shell
+      placeholder: "e.g. macOS, Chrome, Node 20, running from source"
+    validations:
+      required: false

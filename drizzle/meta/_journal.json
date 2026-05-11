@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1773379172181,
+      "tag": "0000_wooden_lizard",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1747000000000,
+      "tag": "0001_add_deployments",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1747100000000,
+      "tag": "0002_add_auth_tables",
+      "breakpoints": true
+    }
+  ]
+}
