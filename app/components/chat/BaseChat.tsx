@@ -421,7 +421,12 @@ export const BaseChat = React.memo(
 
         // Encrypt the key before storing in cookies
         const encryptedKey = await encryptApiKeyValue(apiKey);
-        const cookieKeys = { ...apiKeys, [providerName]: encryptedKey };
+
+        // Read the current raw cookie to preserve any existing encrypted values
+        // (apiKeys state has empty strings for encrypted entries, so we cannot spread it back)
+        const rawCookie = Cookies.get('apiKeys');
+        const currentCookieKeys: Record<string, string> = rawCookie ? (() => { try { return JSON.parse(rawCookie); } catch { return {}; } })() : {};
+        const cookieKeys = { ...currentCookieKeys, [providerName]: encryptedKey };
 
         Cookies.set('apiKeys', JSON.stringify(cookieKeys), {
           secure: window.location.protocol === 'https:',

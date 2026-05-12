@@ -122,8 +122,10 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
         if (value.trim()) {
           const encrypted = await encryptApiKeyValue(value.trim());
           parsed[provider.name] = encrypted;
-        } else {
+          setHasKey(true);
+        } else if (!hasKey) {
           delete parsed[provider.name];
+          setHasKey(false);
         }
 
         Cookies.set('apiKeys', JSON.stringify(parsed), {
@@ -131,27 +133,32 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
           sameSite: 'strict',
           expires: 30,
         });
-        setHasKey(value.trim().length > 0);
       } catch {
         toast.error('Failed to save API key');
       }
     },
-    [provider.name],
+    [provider.name, hasKey],
   );
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
-        saveApiKey(apiKey);
-        toast.success(`API key for ${provider.name} saved`);
+        if (apiKey.trim()) {
+          saveApiKey(apiKey);
+          toast.success(`API key for ${provider.name} saved`);
+        }
       }
     },
     [apiKey, saveApiKey, provider.name],
   );
 
   const handleBlur = useCallback(() => {
+    if (!apiKey && hasKey) {
+      return;
+    }
+
     saveApiKey(apiKey);
-  }, [apiKey, saveApiKey]);
+  }, [apiKey, hasKey, saveApiKey]);
 
   const testConnection = useCallback(async () => {
     if (!apiKey.trim() && !hasEnvKey) {
