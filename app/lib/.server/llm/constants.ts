@@ -95,14 +95,33 @@ export function getThinkingProviderOptions(
 }
 
 /**
+ * Maximum output tokens allowed for free-tier models.
+ * OpenRouter (and similar gateways) pre-reserve the full max_tokens budget from the
+ * account's credit balance at request time.  Requesting a large output budget on a
+ * free model causes a "can only afford N tokens" error even when per-token cost is $0,
+ * because the platform still performs an upfront credit-reservation check.
+ * Capping at 4 096 tokens keeps responses usable while staying within free limits.
+ */
+export const FREE_MODEL_TOKEN_CAP = 4_096;
+
+/**
  * Calculate the completion token limit for a given model.
  *
  * Priority:
- * 1. Model-specific `maxCompletionTokens`
- * 2. Provider-specific default from `PROVIDER_COMPLETION_LIMITS`
- * 3. Fallback: `min(MAX_TOKENS, 16384)`
+ * 1. Free models are always capped at FREE_MODEL_TOKEN_CAP (overrides everything else)
+ * 2. Model-specific `maxCompletionTokens`
+ * 3. Provider-specific default from `PROVIDER_COMPLETION_LIMITS`
+ * 4. Fallback: `min(MAX_TOKENS, 16384)`
  */
-export function getCompletionTokenLimit(modelDetails: { maxCompletionTokens?: number; provider: string }): number {
+export function getCompletionTokenLimit(modelDetails: {
+  maxCompletionTokens?: number;
+  provider: string;
+  isFree?: boolean;
+}): number {
+  if (modelDetails.isFree) {
+    return FREE_MODEL_TOKEN_CAP;
+  }
+
   if (modelDetails.maxCompletionTokens && modelDetails.maxCompletionTokens > 0) {
     return modelDetails.maxCompletionTokens;
   }

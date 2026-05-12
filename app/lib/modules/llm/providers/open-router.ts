@@ -321,7 +321,6 @@ export default class OpenRouterProvider extends BaseProvider {
       label: 'Llama 3.1 8B [FREE] (Meta)',
       provider: 'OpenRouter',
       maxTokenAllowed: 131_072,
-      maxCompletionTokens: 4_096,
       isFree: true,
     },
     {
@@ -329,7 +328,6 @@ export default class OpenRouterProvider extends BaseProvider {
       label: 'Gemma 3 27B [FREE] (Google)',
       provider: 'OpenRouter',
       maxTokenAllowed: 131_072,
-      maxCompletionTokens: 8_192,
       isFree: true,
     },
     {
@@ -337,7 +335,6 @@ export default class OpenRouterProvider extends BaseProvider {
       label: 'DeepSeek R1 [FREE] (DeepSeek)',
       provider: 'OpenRouter',
       maxTokenAllowed: 163_840,
-      maxCompletionTokens: 32_000,
       isFree: true,
     },
     {
@@ -345,7 +342,20 @@ export default class OpenRouterProvider extends BaseProvider {
       label: 'Mistral 7B [FREE] (Mistral)',
       provider: 'OpenRouter',
       maxTokenAllowed: 32_768,
-      maxCompletionTokens: 4_096,
+      isFree: true,
+    },
+    {
+      name: 'qwen/qwen3-235b-a22b:free',
+      label: 'Qwen3 235B A22B [FREE] (Alibaba)',
+      provider: 'OpenRouter',
+      maxTokenAllowed: 40_960,
+      isFree: true,
+    },
+    {
+      name: 'meta-llama/llama-4-maverick:free',
+      label: 'Llama 4 Maverick [FREE] (Meta)',
+      provider: 'OpenRouter',
+      maxTokenAllowed: 524_288,
       isFree: true,
     },
   ];
@@ -436,12 +446,17 @@ export default class OpenRouterProvider extends BaseProvider {
           const contextTokens = Math.min(m.context_length ?? 32_000, 2_000_000);
           const maxCompletion = m.top_provider?.max_completion_tokens ?? undefined;
 
-          return {
+          /*
+         * Free models: never set maxCompletionTokens.
+         * getCompletionTokenLimit() will cap them at FREE_MODEL_TOKEN_CAP (4 096)
+         * regardless, but omitting it here avoids any accidental override.
+         */
+        return {
             name: m.id,
             label: buildModelLabel(m, isFree),
             provider: this.name,
             maxTokenAllowed: contextTokens,
-            maxCompletionTokens: maxCompletion && maxCompletion > 0 ? maxCompletion : undefined,
+            maxCompletionTokens: isFree ? undefined : (maxCompletion && maxCompletion > 0 ? maxCompletion : undefined),
             isFree,
           };
         })
