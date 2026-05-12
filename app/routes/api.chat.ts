@@ -1041,15 +1041,15 @@ async function chatAction({ context, request }: ActionFunctionArgs) {
         if (
           errorMessage.includes('API key') ||
           errorMessage.includes('api_key') ||
-          errorMessage.includes('unauthorized') ||
-          errorMessage.includes('authentication') ||
-          errorMessage.includes('missing authentication') ||
-          errorMessage.includes('invalid credentials') ||
-          errorMessage.includes('forbidden') ||
-          errorMessage.includes('access denied') ||
+          errorMessage.toLowerCase().includes('unauthorized') ||
+          errorMessage.toLowerCase().includes('authentication') ||
+          errorMessage.toLowerCase().includes('missing authentication') ||
+          errorMessage.toLowerCase().includes('invalid credentials') ||
+          errorMessage.toLowerCase().includes('forbidden') ||
+          errorMessage.toLowerCase().includes('access denied') ||
           errorMessage.includes('401')
         ) {
-          return 'Custom error: Invalid or missing API key. Please check your API key in Settings.';
+          return 'Custom error: Invalid or missing API key. Go to Settings → Providers → OpenRouter and re-enter your full key from openrouter.ai/settings/keys';
         }
 
         if (errorMessage.includes('token') && errorMessage.includes('limit')) {

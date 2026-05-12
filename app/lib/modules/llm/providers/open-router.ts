@@ -518,15 +518,17 @@ export default class OpenRouterProvider extends BaseProvider {
     const baseUrl = customBaseUrl || OPENROUTER_API_BASE;
 
     /*
-     * Pass the API key via the SDK's `apiKey` option — this is the canonical
-     * way for @ai-sdk/openai to set the Authorization header.
-     * The extra `headers` only carry OpenRouter-specific metadata headers;
-     * we do NOT duplicate Authorization here to avoid any conflict.
+     * Set Authorization explicitly in `headers` as well as via `apiKey`.
+     * Some versions of @ai-sdk/openai merge custom `headers` with their
+     * defaults; others let custom headers shadow the auto-generated ones,
+     * silently dropping `Authorization`.  Providing it in both places
+     * guarantees the header is always present regardless of SDK behaviour.
      */
     const openai = createOpenAI({
       baseURL: baseUrl,
       apiKey,
       headers: {
+        Authorization: `Bearer ${apiKey}`,
         'HTTP-Referer': SITE_URL,
         'X-Title': SITE_NAME,
       },
