@@ -1110,7 +1110,17 @@ export const ChatImpl = memo(
 
       if (storedApiKeys) {
         try {
-          setApiKeys(JSON.parse(storedApiKeys));
+          const raw = JSON.parse(storedApiKeys) as Record<string, string>;
+
+          // Replace encrypted values with empty strings so they don't appear in
+          // body.apiKeys — the server reads the real encrypted values from the cookie.
+          const sanitized: Record<string, string> = {};
+
+          for (const [k, v] of Object.entries(raw)) {
+            sanitized[k] = typeof v === 'string' && v.startsWith('enc:') ? '' : v;
+          }
+
+          setApiKeys(sanitized);
         } catch {
           // Corrupted cookie — ignore silently
         }

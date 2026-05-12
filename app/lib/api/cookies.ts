@@ -76,20 +76,32 @@ export function getApiKeysFromCookie(cookieHeader: string | null): Record<string
   const cookies = parseCookies(cookieHeader);
 
   if (!cookies.apiKeys) {
+    logger.info('getApiKeysFromCookie: no apiKeys cookie found');
     return {};
   }
 
   try {
     const keys = JSON.parse(cookies.apiKeys) as Record<string, string>;
 
+    logger.info(`getApiKeysFromCookie: providers in cookie = [${Object.keys(keys).join(', ')}]`);
+
     for (const [provider, value] of Object.entries(keys)) {
       if (typeof value === 'string' && value.startsWith(ENC_PREFIX)) {
-        keys[provider] = decryptCookieValue(value);
+        const decrypted = decryptCookieValue(value);
+        logger.info(
+          `getApiKeysFromCookie: ${provider} encrypted → decrypted length=${decrypted.length}, empty=${decrypted.length === 0}`,
+        );
+        keys[provider] = decrypted;
+      } else {
+        logger.info(
+          `getApiKeysFromCookie: ${provider} plaintext length=${value.length}, empty=${value.length === 0}`,
+        );
       }
     }
 
     return keys;
-  } catch {
+  } catch (err) {
+    logger.error('getApiKeysFromCookie: JSON.parse failed:', err);
     return {};
   }
 }

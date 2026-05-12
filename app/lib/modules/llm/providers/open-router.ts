@@ -145,6 +145,10 @@ export default class OpenRouterProvider extends BaseProvider {
       defaultApiTokenKey: 'OPEN_ROUTER_API_KEY',
     });
 
+    logger.info(
+      `getModelInstance: apiKey resolved — defined=${apiKey !== undefined}, empty=${apiKey === ''}, length=${apiKey?.length ?? 0}, prefix=${apiKey ? apiKey.substring(0, 8) : 'N/A'}`,
+    );
+
     if (!apiKey) {
       throw new Error(`Missing API key for ${this.name} provider. Please add your OpenRouter API key in Settings.`);
     }
