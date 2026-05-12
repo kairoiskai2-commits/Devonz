@@ -138,8 +138,9 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
 
         Cookies.set('apiKeys', JSON.stringify(parsed), {
           secure: window.location.protocol === 'https:',
-          sameSite: 'strict',
+          sameSite: 'lax',
           expires: 30,
+          path: '/',
         });
       } catch {
         toast.error('Failed to save API key');

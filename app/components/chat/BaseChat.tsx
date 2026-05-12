@@ -439,8 +439,9 @@ export const BaseChat = React.memo(
 
         Cookies.set('apiKeys', JSON.stringify(cookieKeys), {
           secure: window.location.protocol === 'https:',
-          sameSite: 'strict',
+          sameSite: 'lax',
           expires: 30,
+          path: '/',
         });
 
         setIsModelLoading(providerName);
