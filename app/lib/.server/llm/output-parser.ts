@@ -35,8 +35,8 @@ const PHASE_TOKEN_PREFIX = '__phase:';
 /** Maximum bytes to buffer before forcing a flush (1 MB). */
 const MAX_ACCUMULATOR_BYTES = 1_048_576;
 
-/** Maximum bytes of input with no event emitted before deadlock recovery (10 KB). */
-const DEADLOCK_THRESHOLD = 10_240;
+/** Maximum bytes of input with no event emitted before deadlock recovery (50 KB). */
+const DEADLOCK_THRESHOLD = 51_200;
 
 /** Incremental chunk size for file_chunk events (characters). */
 const CHUNK_FLUSH_SIZE = 4096;
@@ -109,8 +109,10 @@ export class ServerOutputParser {
     while (i < input.length) {
       // ── Deadlock detection ──────────────────────────────────────────────
       if (s.bytesSinceLastEvent > DEADLOCK_THRESHOLD) {
-        logger.warn('Deadlock detected: no event emitted after 10KB of input — resetting parser');
-        events.push(this.#makeError('PARSER_DEADLOCK', 'Parser state machine deadlock — forcing reset', true));
+        logger.warn(
+          'Deadlock detected: no event emitted after 50KB of input — resetting parser silently. ' +
+            'This usually means the LLM output file content as plain text instead of using a tool.',
+        );
         this.#forceReset(s);
 
         // Continue parsing from current position in idle state
@@ -246,12 +248,9 @@ export class ServerOutputParser {
       return tagEnd + 1;
     }
 
-    // Check for unexpected closing tags in idle state (malformed XML)
+    // Check for unexpected closing tags in idle state (malformed XML) — log only, no error event
     if (remaining.startsWith(ARTIFACT_TAG_CLOSE) || remaining.startsWith(ACTION_TAG_CLOSE)) {
       logger.warn('Unexpected closing tag in idle state — ignoring');
-      events.push(
-        this.#makeError('UNEXPECTED_CLOSE_TAG', `Unexpected closing tag in idle state at position ${tagIndex}`, true),
-      );
       s.bytesSinceLastEvent = 0;
 
       const closeEnd = input.indexOf('>', tagIndex);
@@ -464,10 +463,9 @@ export class ServerOutputParser {
       return tagEnd + 1;
     }
 
-    // Check for a new artifact open (nested artifact — malformed)
+    // Check for a new artifact open (nested artifact — malformed) — recover silently, no error event
     if (remaining.startsWith(ARTIFACT_TAG_OPEN)) {
-      logger.warn('Nested artifact tag detected — emitting error and resetting');
-      events.push(this.#makeError('NESTED_ARTIFACT', 'Nested <devonzArtifact> detected — resetting parser', true));
+      logger.warn('Nested artifact tag detected — recovering silently and resetting parser');
 
       if (s.currentFilePath) {
         this.#flushAccumulator(s, events);

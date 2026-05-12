@@ -118,8 +118,16 @@ function handlePhaseChange(event: PhaseChangeEvent): void {
   logger.info(`Phase changed to: ${event.phase}${event.description ? ` — ${event.description}` : ''}`);
 }
 
+/** Internal parser recovery codes that should never affect file generation state. */
+const INTERNAL_PARSER_CODES = new Set(['PARSER_DEADLOCK', 'UNEXPECTED_CLOSE_TAG', 'NESTED_ARTIFACT']);
+
 function handleError(event: ErrorEvent): void {
   const { code, message, recoverable } = event;
+
+  if (INTERNAL_PARSER_CODES.has(code)) {
+    logger.warn(`Parser internal recovery [${code}]: ${message} — file generation state unaffected`);
+    return;
+  }
 
   logger.error(`Stream error [${code}]: ${message} (recoverable: ${recoverable})`);
 

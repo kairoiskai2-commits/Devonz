@@ -257,11 +257,25 @@ export const BaseChat = React.memo(
           }
 
           if (event.type === 'error' && typeof event.message === 'string') {
-            const recoverable = event.recoverable === true;
-            toast.warning(event.message, {
-              duration: recoverable ? 5000 : Infinity,
-            });
-            logger.warn('Blueprint error event:', event.message);
+            const code = typeof event.code === 'string' ? event.code : '';
+
+            // Internal parser recovery events — log only, never surface as a toast.
+            // These are false positives in agent mode (no artifact tags in text output).
+            const INTERNAL_PARSER_CODES = new Set([
+              'PARSER_DEADLOCK',
+              'UNEXPECTED_CLOSE_TAG',
+              'NESTED_ARTIFACT',
+            ]);
+
+            if (INTERNAL_PARSER_CODES.has(code)) {
+              logger.debug('Internal parser event suppressed from UI:', code, event.message);
+            } else {
+              const recoverable = event.recoverable === true;
+              toast.warning(event.message, {
+                duration: recoverable ? 5000 : Infinity,
+              });
+              logger.warn('Blueprint error event:', event.message);
+            }
           }
 
           if (
