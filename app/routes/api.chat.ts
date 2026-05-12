@@ -1040,10 +1040,16 @@ async function chatAction({ context, request }: ActionFunctionArgs) {
 
         if (
           errorMessage.includes('API key') ||
+          errorMessage.includes('api_key') ||
           errorMessage.includes('unauthorized') ||
-          errorMessage.includes('authentication')
+          errorMessage.includes('authentication') ||
+          errorMessage.includes('missing authentication') ||
+          errorMessage.includes('invalid credentials') ||
+          errorMessage.includes('forbidden') ||
+          errorMessage.includes('access denied') ||
+          errorMessage.includes('401')
         ) {
-          return 'Custom error: Invalid or missing API key. Please check your API key configuration.';
+          return 'Custom error: Invalid or missing API key. Please check your API key in Settings.';
         }
 
         if (errorMessage.includes('token') && errorMessage.includes('limit')) {

@@ -74,7 +74,6 @@ async function enhancerAction({ context, request }: ActionFunctionArgs) {
     message: string;
     model: string;
     provider: ProviderInfo;
-    apiKeys?: Record<string, string>;
   };
 
   const { name: providerName } = provider;

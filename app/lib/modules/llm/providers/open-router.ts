@@ -72,12 +72,10 @@ export default class OpenRouterProvider extends BaseProvider {
     try {
       const apiKey =
         apiKeys?.[this.name] ||
-        serverEnv?.['OPEN_ROUTER_API_KEY'] ||
+        serverEnv['OPEN_ROUTER_API_KEY'] ||
         process?.env?.['OPEN_ROUTER_API_KEY'];
 
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-      };
+      const headers: Record<string, string> = {};
 
       if (apiKey) {
         headers['Authorization'] = `Bearer ${apiKey}`;

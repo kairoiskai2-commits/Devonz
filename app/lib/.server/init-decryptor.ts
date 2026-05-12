@@ -15,13 +15,13 @@ const logger = createScopedLogger('InitDecryptor');
  */
 try {
   /*
-   * Dynamic import avoids a top-level dependency on encryption.ts whose
-   * module-scope key resolution throws when the env var is absent.
+   * Dynamic import is used here purely for clarity — encryption.ts uses lazy
+   * key initialisation so it never throws at import time.
    * Top-level await is fine here — this module is server-only (.server dir).
    */
   const { decrypt } = await import('./encryption');
   setDecryptor(decrypt);
   logger.info('Cookie decryptor registered');
 } catch (error) {
-  logger.warn('Encryption module not available — encrypted cookies will fall back to raw ciphertext:', error);
+  logger.warn('Failed to load encryption module — encrypted cookies will fall back to empty strings:', error);
 }

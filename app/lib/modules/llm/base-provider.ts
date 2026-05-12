@@ -50,12 +50,8 @@ export abstract class BaseProvider implements ProviderInfo {
     defaultApiTokenKey: string;
   }) {
     const { apiKeys, providerSettings, serverEnv, defaultBaseUrlKey, defaultApiTokenKey } = options;
-    let settingsBaseUrl = providerSettings?.baseUrl;
+    let settingsBaseUrl = providerSettings?.baseUrl?.trim() || undefined;
     const manager = LLMManager.getInstance();
-
-    if (settingsBaseUrl && settingsBaseUrl.length === 0) {
-      settingsBaseUrl = undefined;
-    }
 
     const baseUrlKey = this.config.baseUrlKey || defaultBaseUrlKey;
     let baseUrl =

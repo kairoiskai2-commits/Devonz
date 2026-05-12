@@ -75,12 +75,6 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
     }
   }, [provider.name]);
 
-  useEffect(() => {
-    if (provider.settings.enabled && hasAnyKey && models.length === 0 && !loadingModels) {
-      fetchModels();
-    }
-  }, [provider.settings.enabled, hasAnyKey]);
-
   const fetchModels = useCallback(async () => {
     setLoadingModels(true);
 
@@ -105,6 +99,12 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
     }
   }, [provider.name, provider.staticModels]);
 
+  useEffect(() => {
+    if (provider.settings.enabled && hasAnyKey && models.length === 0 && !loadingModels) {
+      fetchModels();
+    }
+  }, [provider.settings.enabled, hasAnyKey, fetchModels]);
+
   const savePreferredModel = useCallback(
     (modelName: string) => {
       updatePreferredModel(provider.name, modelName);
@@ -117,7 +117,15 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
     async (value: string) => {
       try {
         const raw = Cookies.get('apiKeys');
-        const parsed: Record<string, string> = raw ? JSON.parse(raw) : {};
+        let parsed: Record<string, string> = {};
+
+        if (raw) {
+          try {
+            parsed = JSON.parse(raw);
+          } catch {
+            parsed = {};
+          }
+        }
 
         if (value.trim()) {
           const encrypted = await encryptApiKeyValue(value.trim());
@@ -167,7 +175,7 @@ export function CloudProviderCard({ provider, index, onToggle, iconClass, descri
     }
 
     if (apiKey.trim()) {
-      saveApiKey(apiKey);
+      await saveApiKey(apiKey);
     }
 
     setTesting(true);
