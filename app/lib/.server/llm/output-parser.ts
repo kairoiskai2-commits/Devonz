@@ -35,8 +35,8 @@ const PHASE_TOKEN_PREFIX = '__phase:';
 /** Maximum bytes to buffer before forcing a flush (1 MB). */
 const MAX_ACCUMULATOR_BYTES = 1_048_576;
 
-/** Maximum bytes of input with no event emitted before deadlock recovery (50 KB). */
-const DEADLOCK_THRESHOLD = 51_200;
+/** Maximum bytes of input with no event emitted before deadlock recovery (100 KB). */
+const DEADLOCK_THRESHOLD = 102_400;
 
 /** Incremental chunk size for file_chunk events (characters). */
 const CHUNK_FLUSH_SIZE = 4096;
