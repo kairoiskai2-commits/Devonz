@@ -846,11 +846,26 @@ ${fileList.map((f) => `- ${f}`).join('\n')}
         (m) => m.provider === provider.name && m.name !== modelDetails.name,
       );
 
+      /*
+       * If the failing model is a free model, only try other free models as
+       * fallback candidates.  Trying paid models would immediately fail with
+       * "requires more credits" — turning one failed request into dozens of
+       * failed requests and masking the real problem from the user.
+       */
+      if (modelDetails.isFree) {
+        const freeCandidates = candidateModels.filter((m) => m.isFree);
+
+        if (freeCandidates.length > 0) {
+          candidateModels = freeCandidates;
+        }
+      }
+
       // If the full model list has no alternatives for this provider, fall back to static list
       if (candidateModels.length === 0) {
-        candidateModels = llm.getStaticModelListFromProvider(provider).filter(
+        const staticFallbacks = llm.getStaticModelListFromProvider(provider).filter(
           (m) => m.name !== modelDetails.name,
         );
+        candidateModels = modelDetails.isFree ? staticFallbacks.filter((m) => m.isFree) : staticFallbacks;
       }
 
       // Try each candidate until one succeeds with stream probing

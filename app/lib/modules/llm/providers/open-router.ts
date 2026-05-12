@@ -345,17 +345,17 @@ export default class OpenRouterProvider extends BaseProvider {
       isFree: true,
     },
     {
-      name: 'qwen/qwen3-235b-a22b:free',
-      label: 'Qwen3 235B A22B [FREE] (Alibaba)',
-      provider: 'OpenRouter',
-      maxTokenAllowed: 40_960,
-      isFree: true,
-    },
-    {
       name: 'meta-llama/llama-4-maverick:free',
       label: 'Llama 4 Maverick [FREE] (Meta)',
       provider: 'OpenRouter',
       maxTokenAllowed: 524_288,
+      isFree: true,
+    },
+    {
+      name: 'meta-llama/llama-4-scout:free',
+      label: 'Llama 4 Scout [FREE] (Meta)',
+      provider: 'OpenRouter',
+      maxTokenAllowed: 327_680,
       isFree: true,
     },
   ];

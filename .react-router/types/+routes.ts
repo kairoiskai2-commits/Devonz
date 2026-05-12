@@ -63,6 +63,9 @@ type Pages = {
   "/api/system/git-info": {
     params: {};
   };
+  "/api/verify-provider": {
+    params: {};
+  };
   "/api/auth-providers": {
     params: {};
   };
@@ -255,7 +258,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/api/configured-providers" | "/api/auto-deploy-status" | "/api/system/diagnostics" | "/api/mcp-update-config" | "/api/runtime/terminal" | "/api/system/disk-info" | "/api/background-chat" | "/api/background-chat/:id" | "/api/export-api-keys" | "/api/github-branches" | "/api/github-template" | "/api/gitlab-branches" | "/api/gitlab-projects" | "/api/preview-proxy/*" | "/api/system/git-info" | "/api/auth-providers" | "/api/check-env-keys" | "/api/netlify-deploy" | "/api/runtime/search" | "/api/vercel-domains" | "/api/check-env-key" | "/api/sentry-tunnel" | "/api/supabase-user" | "/api/vercel-deploy" | "/api/version-check" | "/api/agent-skills" | "/api/github-stats" | "/api/netlify-user" | "/api/runtime/exec" | "/api/vercel-proxy" | "/api/auto-deploy" | "/api/git-proxy/*" | "/api/github-user" | "/api/runtime/git" | "/api/vercel-user" | "/forgot-password" | "/api/bug-report" | "/api/db/migrate" | "/api/runtime/fs" | "/api/web-search" | "/reset-password" | "/api/git-clone" | "/api/mcp-check" | "/api/v1/status" | "/preview/:port" | "/api/db/chats" | "/api/db/chats/:id" | "/api/enhancer" | "/api/git-info" | "/api/supabase" | "/api/supabase/variables" | "/api/supabase/query" | "/api/encrypt" | "/api/llmcall" | "/api/v1/chat" | "/api/agents" | "/api/agents/:id" | "/api/auth/*" | "/api/deploy" | "/api/health" | "/api/models" | "/api/models/:provider" | "/api/update" | "/templates" | "/api/chat" | "/chat/:id" | "/agents" | "/signup" | "/admin" | "/login" | "/git" | "/*";
+    page: "/" | "/api/configured-providers" | "/api/auto-deploy-status" | "/api/system/diagnostics" | "/api/mcp-update-config" | "/api/runtime/terminal" | "/api/system/disk-info" | "/api/background-chat" | "/api/background-chat/:id" | "/api/export-api-keys" | "/api/github-branches" | "/api/github-template" | "/api/gitlab-branches" | "/api/gitlab-projects" | "/api/preview-proxy/*" | "/api/system/git-info" | "/api/verify-provider" | "/api/auth-providers" | "/api/check-env-keys" | "/api/netlify-deploy" | "/api/runtime/search" | "/api/vercel-domains" | "/api/check-env-key" | "/api/sentry-tunnel" | "/api/supabase-user" | "/api/vercel-deploy" | "/api/version-check" | "/api/agent-skills" | "/api/github-stats" | "/api/netlify-user" | "/api/runtime/exec" | "/api/vercel-proxy" | "/api/auto-deploy" | "/api/git-proxy/*" | "/api/github-user" | "/api/runtime/git" | "/api/vercel-user" | "/forgot-password" | "/api/bug-report" | "/api/db/migrate" | "/api/runtime/fs" | "/api/web-search" | "/reset-password" | "/api/git-clone" | "/api/mcp-check" | "/api/v1/status" | "/preview/:port" | "/api/db/chats" | "/api/db/chats/:id" | "/api/enhancer" | "/api/git-info" | "/api/supabase" | "/api/supabase/variables" | "/api/supabase/query" | "/api/encrypt" | "/api/llmcall" | "/api/v1/chat" | "/api/agents" | "/api/agents/:id" | "/api/auth/*" | "/api/deploy" | "/api/health" | "/api/models" | "/api/models/:provider" | "/api/update" | "/templates" | "/api/chat" | "/chat/:id" | "/agents" | "/signup" | "/admin" | "/login" | "/git" | "/*";
   };
   "routes/api.configured-providers.ts": {
     id: "routes/api.configured-providers";
@@ -316,6 +319,10 @@ type RouteFiles = {
   "routes/api.system.git-info.ts": {
     id: "routes/api.system.git-info";
     page: "/api/system/git-info";
+  };
+  "routes/api.verify-provider.ts": {
+    id: "routes/api.verify-provider";
+    page: "/api/verify-provider";
   };
   "routes/api.auth-providers.ts": {
     id: "routes/api.auth-providers";
@@ -568,6 +575,7 @@ type RouteModules = {
   "routes/api.gitlab-projects": typeof import("./app/routes/api.gitlab-projects.ts");
   "routes/api.preview-proxy.$": typeof import("./app/routes/api.preview-proxy.$.ts");
   "routes/api.system.git-info": typeof import("./app/routes/api.system.git-info.ts");
+  "routes/api.verify-provider": typeof import("./app/routes/api.verify-provider.ts");
   "routes/api.auth-providers": typeof import("./app/routes/api.auth-providers.ts");
   "routes/api.check-env-keys": typeof import("./app/routes/api.check-env-keys.ts");
   "routes/api.netlify-deploy": typeof import("./app/routes/api.netlify-deploy.ts");

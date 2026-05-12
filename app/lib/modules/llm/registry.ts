@@ -29,6 +29,9 @@ import ShuttleAIProvider from './providers/shuttleai';
 import CloudynicProvider from './providers/cloudynic';
 import ApiFreeLLMProvider from './providers/apifreellm';
 import TypeGPTProvider from './providers/typegpt';
+import ChutesProvider from './providers/chutes';
+import SambanovaProvider from './providers/sambanova';
+import GlhfProvider from './providers/glhf';
 
 export {
   AnthropicProvider,
@@ -62,4 +65,7 @@ export {
   CloudynicProvider,
   ApiFreeLLMProvider,
   TypeGPTProvider,
+  ChutesProvider,
+  SambanovaProvider,
+  GlhfProvider,
 };
