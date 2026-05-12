@@ -17,6 +17,49 @@ let versionDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 let pendingVersionData: { messageId: string; title: string } | null = null;
 
 /**
+ * Create a version snapshot and auto-commit for agent mode completions.
+ * Safe to call multiple times for the same messageId — deduplication is built in.
+ */
+export async function createVersionIfNeeded(messageId: string, title: string): Promise<void> {
+  if (versionedMessages.has(messageId)) {
+    return;
+  }
+
+  versionedMessages.add(messageId);
+
+  const files = workbenchStore.files.get();
+  const fileSnapshot: Record<string, { content: string; type: string }> = {};
+
+  for (const [path, dirent] of Object.entries(files)) {
+    if (dirent?.type === 'file' && !dirent.isBinary) {
+      fileSnapshot[path] = {
+        content: dirent.content || '',
+        type: 'file',
+      };
+    }
+  }
+
+  const version = versionsStore.createVersion(messageId, title, `Completed: ${title}`, fileSnapshot);
+
+  logger.trace('Agent mode version created for message:', messageId);
+
+  if (runtimeContext.projectId) {
+    try {
+      const { commit } = await import('~/lib/runtime/git-client');
+      const sha = await commit(runtimeContext.projectId, title);
+
+      if (sha) {
+        versionsStore.updateCommitSha(version.id, sha);
+      }
+    } catch (error) {
+      logger.warn('Agent mode git commit failed (best-effort, non-blocking):', error);
+    }
+  }
+
+  versionsStore.scheduleThumbnailCapture(version.id);
+}
+
+/**
  * Reset version tracking state. Call when starting a new chat session
  * to prevent stale message IDs from accumulating indefinitely.
  */

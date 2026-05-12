@@ -5,7 +5,7 @@ import { useAnimate } from 'framer-motion';
 import { memo, useCallback, useEffect, useMemo, useRef, useState, startTransition } from 'react';
 import { toast } from 'sonner';
 import { useMessageParser, usePromptEnhancer, useShortcuts } from '~/lib/hooks';
-import { resetVersionTracking } from '~/lib/hooks/useMessageParser';
+import { resetVersionTracking, createVersionIfNeeded } from '~/lib/hooks/useMessageParser';
 import { description, useChatHistory } from '~/lib/persistence';
 import { chatId } from '~/lib/persistence/useChatHistory';
 import type { ImportChatFn } from '~/lib/persistence/db';
@@ -453,6 +453,16 @@ export const ChatImpl = memo(
 
         // Finalize any actions stuck in 'running' (e.g. truncated closing tags)
         workbenchStore.finalizeRunningActions();
+
+        // Create checkpoint (version + git commit) for agent mode completions.
+        // Delay 1.5s to let file writes flush into workbenchStore before snapshotting.
+        if (agentModeStore.get().settings.enabled) {
+          setTimeout(() => {
+            createVersionIfNeeded(message.id, 'Agent Task Complete').catch((err) =>
+              logger.warn('Agent mode checkpoint failed:', err),
+            );
+          }, 1500);
+        }
 
         /*
          * Check if this was an auto-fix response.

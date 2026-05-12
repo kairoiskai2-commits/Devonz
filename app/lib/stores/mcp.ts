@@ -15,7 +15,7 @@ export type MCPSettings = {
 };
 
 const defaultSettings: MCPSettings = {
-  maxLLMSteps: 5,
+  maxLLMSteps: 10,
   mcpConfig: {
     mcpServers: {},
   },

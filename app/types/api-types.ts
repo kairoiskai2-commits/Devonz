@@ -112,7 +112,7 @@ export const chatRequestSchema = z.object({
   planMode: z.boolean().default(false),
   designScheme: designSchemeRequestSchema,
   supabase: supabaseConnectionSchema,
-  maxLLMSteps: z.number().int().positive().max(20).default(5),
+  maxLLMSteps: z.number().int().positive().max(30).default(10),
   agentMode: z.boolean().optional(),
   modelRoutingConfig: modelRoutingConfigSchema,
   blueprintMode: z.boolean().optional(),

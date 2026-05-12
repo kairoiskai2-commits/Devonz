@@ -194,7 +194,7 @@ export default function McpTab() {
               type="number"
               placeholder="Maximum number of sequential LLM calls"
               min="1"
-              max="20"
+              max="30"
               value={maxLLMSteps}
               onChange={(e) => handleMaxLLMCallChange(e.target.value)}
               className="w-full px-3 py-2 text-veyra-elements-textPrimary text-sm rounded-lg bg-veyra-elements-background-depth-1 border border-veyra-elements-borderColor focus:outline-none focus:ring-1 focus:ring-veyra-elements-borderColorActive"
