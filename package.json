@@ -151,7 +151,7 @@
     "@iconify/types": "^2.0.0",
     "@playwright/test": "^1.58.2",
     "@react-router/dev": "^7.0.0",
-    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.3.2",
     "@types/diff": "^5.2.3",
     "@types/dom-speech-recognition": "^0.0.4",
@@ -163,7 +163,7 @@
     "@types/react-window": "^2.0.0",
     "@types/ws": "^8.18.1",
     "@vitejs/plugin-react": "^4.3.4",
-    "@vitest/coverage-v8": "^2.0.0",
+    "@vitest/coverage-v8": "^4.1.10",
     "drizzle-kit": "^0.31.9",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-prettier": "^5.5.5",
@@ -182,7 +182,7 @@
     "vite": "^5.4.21",
     "vite-plugin-optimize-css-modules": "^1.1.0",
     "vite-tsconfig-paths": "^4.3.2",
-    "vitest": "^2.0.0"
+    "vitest": "^4.1.10"
   },
   "lint-staged": {
     "app/**/*.{ts,tsx}": [
